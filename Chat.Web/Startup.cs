@@ -1,4 +1,5 @@
 using Chat.Data;
+using Chat.Data.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,11 +31,13 @@ namespace Chat.Web
             services.AddDbContext<ChatDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection"),
-                    x=>x.MigrationsAssembly("Chat.Data")));
+                    x => x.MigrationsAssembly("Chat.Data")));
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ChatDbContext>();
+
             services.AddControllersWithViews();
         }
 
