@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Chat.Web.Data
+namespace Chat.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ChatDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ChatDbContext(DbContextOptions<ChatDbContext> options)
             : base(options)
         {
         }

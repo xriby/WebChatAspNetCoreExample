@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace Chat.Web.Data.Migrations
+namespace Chat.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {
