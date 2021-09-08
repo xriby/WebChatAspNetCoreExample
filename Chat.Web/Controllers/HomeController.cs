@@ -20,6 +20,7 @@ namespace Chat.Web.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogInformation("Hello, this is the index!");
             return View();
         }
 
