@@ -1,5 +1,7 @@
 using Chat.Data;
 using Chat.Data.Identity;
+using Chat.Services;
+using Chat.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -39,6 +41,9 @@ namespace Chat.Web
                 .AddEntityFrameworkStores<ChatDbContext>();
 
             services.AddControllersWithViews();
+
+            services.AddTransient<IDateTimeService, DateTimeService>();
+            services.AddTransient<IMessageService, MessageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

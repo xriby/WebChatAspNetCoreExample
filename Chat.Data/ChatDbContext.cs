@@ -1,4 +1,5 @@
 ﻿using Chat.Data.Identity;
+using Chat.Data.Models;
 using Chat.Data.ModelsConfiguration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace Chat.Data
             : base(options)
         {
         }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

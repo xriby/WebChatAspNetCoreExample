@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Chat.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace Chat.Data.Identity
 {
@@ -7,6 +9,14 @@ namespace Chat.Data.Identity
     /// </summary>
     public class ApplicationUser : IdentityUser
     {
+        /// <summary>
+        /// Адрес.
+        /// </summary>
         public string Address { get; set; }
+
+        /// <summary>
+        /// Отравленные сообщения.
+        /// </summary>
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

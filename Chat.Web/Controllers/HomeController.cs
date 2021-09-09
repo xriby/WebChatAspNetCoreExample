@@ -1,4 +1,9 @@
-﻿using Chat.Web.Models;
+﻿using Chat.Data;
+using Chat.Data.Models;
+using Chat.Data.ModelsDto;
+using Chat.Services;
+using Chat.Services.Interfaces;
+using Chat.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,16 +16,31 @@ namespace Chat.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> Logger;
+        private readonly IDateTimeService DateTimeService;
+        private readonly IMessageService MessageService;
+        private readonly ChatDbContext Db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+            IDateTimeService dateTimeService,
+            IMessageService messageService,
+            ChatDbContext db)
         {
-            _logger = logger;
+            Logger = logger;
+            DateTimeService = dateTimeService;
+            MessageService = messageService;
+            Db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            _logger.LogInformation("Hello, this is the index!");
+            Logger.LogInformation("Hello, this is the index!");
+            Logger.LogInformation($"Now: {DateTimeService.UtcNow:dd.MM.yyyy HH:mm}");
+            Logger.LogInformation($"Firsrt user: {Db.Users.FirstOrDefault()?.UserName}");
+
+            await MessageService.SendPrivateMessage(null);
+
+
             return View();
         }
 
@@ -33,6 +53,16 @@ namespace Chat.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Db.Dispose();
+                MessageService.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }
