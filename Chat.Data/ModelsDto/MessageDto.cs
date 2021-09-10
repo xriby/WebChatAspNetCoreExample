@@ -21,6 +21,9 @@ namespace Chat.Data.ModelsDto
         /// <summary>
         /// Текст сообщения.
         /// </summary>
+        [Required(ErrorMessage = "Введите текст")]
+        [MaxLength(512)]
+        [MinLength(2)]
         [Display(Name = "Текст сообщения")]
         public string Text { get; set; }
 

@@ -44,6 +44,7 @@ namespace Chat.Web
 
             services.AddTransient<IDateTimeService, DateTimeService>();
             services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

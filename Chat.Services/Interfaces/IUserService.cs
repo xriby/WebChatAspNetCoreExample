@@ -4,8 +4,14 @@ using System.Threading.Tasks;
 
 namespace Chat.Services.Interfaces
 {
+    /// <summary>
+    /// Интерфейс сервиса работы с пользователями.
+    /// </summary>
     public interface IUserService : IDisposable
     {
-        Task<GetUsersResult> GetUsersAsync();
+        /// <summary>
+        /// Получить всех пользователей.
+        /// </summary>
+        Task<GetUsersResult> GetUsersAsync(string excludeUserName = "");
     }
 }

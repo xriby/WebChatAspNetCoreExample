@@ -20,17 +20,17 @@ namespace Chat.Web.Controllers
         private readonly ILogger<ChatController> Logger;
         private readonly IDateTimeService DateTimeService;
         private readonly IMessageService MessageService;
-        private readonly ChatDbContext Db;
-
+        private readonly IUserService UserService;
+        
         public ChatController(ILogger<ChatController> logger,
             IDateTimeService dateTimeService,
             IMessageService messageService,
-            ChatDbContext db)
+            IUserService userService)
         {
             Logger = logger;
             DateTimeService = dateTimeService;
             MessageService = messageService;
-            Db = db;
+            UserService = userService;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Chat.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            GetMessageResult result = await MessageService.GetPublicMessagesAsync();
+            MessageInfoResult result = await MessageService.GetMessageInfoAsync(UserName);
             return View("Index", result);
         }
 
@@ -57,50 +57,25 @@ namespace Chat.Web.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
-
-        // POST: ChatController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        
+        [Authorize]
+        public async Task<ActionResult> Private(string with)
         {
-            try
+            PrivateMessageInfoResult result = await MessageService.GetPrivateMessageInfoAsync(UserName, with);
+            if (result.Status == EDbQueryStatus.Failure)
             {
-                return RedirectToAction(nameof(Index));
+                var error = new ErrorViewModel { ErrorMessage = result.ErrorMessage };
+                return View("Error", error);
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: ChatController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ChatController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View("Private", result);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                Db.Dispose();
                 MessageService.Dispose();
+                UserService.Dispose();
             }
             base.Dispose(disposing);
         }

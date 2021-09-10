@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace Chat.Services
 {
+    /// <summary>
+    /// Сервис работы с пользователями.
+    /// </summary>
     public class UserService : IUserService
     {
         private readonly ILogger<UserService> Logger;
@@ -26,11 +29,30 @@ namespace Chat.Services
             Db = db;
         }
 
-        public async Task<GetUsersResult> GetUsersAsync()
+        /// <inheritdoc />
+        public async Task<GetUsersResult> GetUsersAsync(string excludeUserName = "")
         {
             var result = new GetUsersResult { Status = EDbQueryStatus.Success };
-            List<ApplicationUser> users = await Db.Users.OrderBy(x => x.UserName).ToListAsync();
-
+            try
+            {
+                List<ApplicationUser> users = await Db.Users.OrderBy(x => x.UserName).ToListAsync();
+                if (users?.Count > 0 && !string.IsNullOrEmpty(excludeUserName))
+                {
+                    ApplicationUser excludeUser = users.FirstOrDefault(x => x.UserName == excludeUserName);
+                    if (excludeUser != null)
+                    {
+                        users.Remove(excludeUser);
+                    }
+                }
+                result.Data = users;
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = "Произошла ошибка при получении пользователей.";
+                Logger.LogError(ex, $"{errorMessage} {ex.Message}");
+                result.Status = EDbQueryStatus.Failure;
+                result.ErrorMessage = errorMessage;
+            }
             return result;
         }
 
@@ -46,7 +68,6 @@ namespace Chat.Services
                 if (disposing)
                 {
                     Db.Dispose();
-
                 }
                 disposed = true;
             }

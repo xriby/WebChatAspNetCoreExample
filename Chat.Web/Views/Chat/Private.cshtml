@@ -1,19 +1,21 @@
 ﻿@using Chat.Data.ModelsDto
 @using Chat.Data.Models
-@model Chat.Data.Common.MessageInfoResult
+@model Chat.Data.Common.PrivateMessageInfoResult
 
 @{
-    ViewData["Title"] = "Общий чат";
+    ViewData["Title"] = "Приватный чат";
 
-    var message = new MessageDto { MessageType = EMessageType.Public };
+    var message = new MessageDto { MessageType = EMessageType.Private };
 }
 
 <h2>@ViewData["Title"]</h2>
 
+
+
 <div class="row">
     <div class="col-md-9">
         <div class="card">
-            <div class="card-header"><h4>Сообщения видят все пользователи</h4></div>
+            <div class="card-header"><h4>С пользователем @Model.ToUser.UserName</h4></div>
             <div class="card-body fixed-panel">
                 @foreach (var item in Model.Messages)
                 {
@@ -33,6 +35,7 @@
             <form asp-action="Add" asp-controller="Chat" method="POST" asp-antiforgery="true">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="@message.MessageType" />
+                <input type="hidden" asp-for="@message.RecipientId" value="@Model.ToUser.Id" />
                 <div class="form-group">
                     <label asp-for="@message.Text" class="control-label"></label>
                     <input asp-for="@message.Text" class="form-control" />
@@ -58,8 +61,6 @@
                     <b>@ViewBag.MessageFrom</b>
                 </p>
             }*@
-        <br />
-        <a asp-action="Index" class="btn btn-outline-secondary">Обновить страницу</a>
     </div>
 </div>
 
