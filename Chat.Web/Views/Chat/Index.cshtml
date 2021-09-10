@@ -1,6 +1,6 @@
 ﻿@using Chat.Data.ModelsDto
 @using Chat.Data.Models
-@model Chat.Data.Common.GetMessagesResult
+@model Chat.Data.Common.GetMessageResult
 
 @{
     ViewData["Title"] = "Общий чат";
@@ -12,16 +12,16 @@
 
 <div class="row">
     <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-heading"><h4>@ViewBag.Title - сообщения видят все пользователи</h4></div>
-            <div class="panel-body fixed-panel">
+        <div class="card">
+            <div class="card-header"><h4>@ViewBag.Title - сообщения видят все пользователи</h4></div>
+            <div class="card-body fixed-panel">
                 @foreach (var item in Model.Messages)
                 {
                     <div class="media">
                         <div class="media-body">
                             <p>
                                 <b>@Html.DisplayFor(modelItem => item.User.UserName)</b>
-                                <small class="text-muted">[@Html.DisplayFor(modelItem => item.CreateDate)]</small>
+                                <small class="text-muted">[@item.CreateDate.ToString("dd.MM.yyyy HH:mm")]</small>
                                 @Html.DisplayFor(modelItem => item.Text)
                             </p>
                         </div>
@@ -45,9 +45,9 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="panel panel-primary">
-            <div class="panel-heading"><h4>Пользователи</h4></div>
-            <div class="panel-body fixed-panel">
+        <div class="card">
+            <div class="card-header"><h5>Пользователи</h5></div>
+            <div class="card-body fixed-panel">
                 @*@Html.Action("UserList")*@
             </div>
         </div>
@@ -58,6 +58,7 @@
                 <b>@ViewBag.MessageFrom</b>
             </p>
         }*@
-        @Html.ActionLink("Обновить страницу", "Index", null, new { @class = "btn btn-default" })
+        <br />
+        <a asp-action="Index" class="btn btn-outline-secondary">Обновить страницу</a>
     </div>
 </div>

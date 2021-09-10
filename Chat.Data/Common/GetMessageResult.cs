@@ -1,14 +1,14 @@
 ﻿using Chat.Common;
-using Chat.Data.Models;
+using Chat.Data.ModelsDto;
 using System.Collections.Generic;
 
 namespace Chat.Data.Common
 {
-    public class GetMessagesResult : DbQueryResultModel<int>
+    public class GetMessageResult : DbQueryResultModel<int>
     {
         /// <summary>
         /// Сообщения.
         /// </summary>
-        public List<Message> Messages { get; set; }
+        public List<MessageDto> Messages { get; set; }
     }
 }

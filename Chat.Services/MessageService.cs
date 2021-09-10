@@ -1,6 +1,7 @@
 ﻿using Chat.Common;
 using Chat.Data;
 using Chat.Data.Common;
+using Chat.Data.Identity;
 using Chat.Data.Models;
 using Chat.Data.ModelsDto;
 using Chat.Services.Interfaces;
@@ -9,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Chat.Services
@@ -20,7 +20,7 @@ namespace Chat.Services
         private readonly ChatDbContext Db;
         private bool disposed = false;
 
-        public MessageService(ILogger<MessageService> logger, 
+        public MessageService(ILogger<MessageService> logger,
             ChatDbContext db)
         {
             Logger = logger;
@@ -33,21 +33,61 @@ namespace Chat.Services
             return null;
         }
 
-        public Task<MessageDto> SendPublicMessageAsync(MessageDto messageDto)
+        public async Task<AddMessageResult> AddMessageAsync(MessageDto messageDto, string userName)
         {
-            throw new NotImplementedException();
-        }
+            var result = new AddMessageResult { Status = EDbQueryStatus.Success };
+            if (string.IsNullOrEmpty(messageDto.Text))
+            {
+                result.Status = EDbQueryStatus.Failure;
+                result.ErrorMessage = "Ошибка. Введите сообщение.";
+                return result;
+            }
+            if (string.IsNullOrEmpty(userName))
+            {
+                result.Status = EDbQueryStatus.Failure;
+                result.ErrorMessage = "Ошибка. Не задан пользователь.";
+                return result;
+            }
+            ApplicationUser user = await Db.Users.FirstOrDefaultAsync(x => x.UserName == userName);
+            if (user == null)
+            {
+                result.Status = EDbQueryStatus.Failure;
+                result.ErrorMessage = "Ошибка. Пользователь не найден.";
+                return result;
+            }
 
-        public async Task<GetMessagesResult> GetPublicMessagesAsync()
-        {
-            var result = new GetMessagesResult { Status = EDbQueryStatus.Success };
+            Message message = (Message)messageDto;
+            message.CreateDate = DateTime.UtcNow;
+            message.User = user;
             try
             {
-                // Возьмем последние 100 сообщений, поскольку в примере не реализован постраничный вывод.
-                List<Message> messages = await Db.Messages
+                await Db.Messages.AddAsync(message);
+                await Db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = "Произошла ошибка при добавлении сообщения.";
+                Logger.LogError(ex, $"{errorMessage} {ex.Message}");
+                result.Status = EDbQueryStatus.Failure;
+                result.ErrorMessage = errorMessage;
+                return result;
+            }
+            return result;
+        }
+
+        /// <inheritdoc />
+        public async Task<GetMessageResult> GetPublicMessagesAsync()
+        {
+            var result = new GetMessageResult { Status = EDbQueryStatus.Success };
+            try
+            {
+                // Возьмем последние 1000 сообщений, поскольку в примере не реализован постраничный вывод.
+                List<MessageDto> messages = await Db.Messages
+                    .Include(x => x.User)
                     .Where(x => x.MessageType == EMessageType.Public)
                     .OrderByDescending(x => x.CreateDate)
-                    .Take(100) 
+                    .Take(1000)
+                    .Select(x => (MessageDto)x)
                     .ToListAsync();
                 result.Messages = messages;
             }
@@ -61,13 +101,11 @@ namespace Chat.Services
             return result;
         }
 
-        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
         }
 
-        /// <inheritdoc />
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
@@ -80,7 +118,5 @@ namespace Chat.Services
                 disposed = true;
             }
         }
-
-        
     }
 }

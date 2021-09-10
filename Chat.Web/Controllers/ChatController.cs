@@ -1,6 +1,10 @@
-﻿using Chat.Data;
+﻿using Chat.Common;
+using Chat.Data;
 using Chat.Data.Common;
+using Chat.Data.ModelsDto;
 using Chat.Services.Interfaces;
+using Chat.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,46 +33,31 @@ namespace Chat.Web.Controllers
             Db = db;
         }
 
-        
+        /// <summary>
+        /// Имя пользователя текущего HTTP запроса
+        /// </summary>
+        public string UserName => User.Identity.Name;
+
         public async Task<ActionResult> Index()
         {
-            await MessageService.SendPrivateMessageAsync(null);
-            GetMessagesResult result = await MessageService.GetPublicMessagesAsync();
+            GetMessageResult result = await MessageService.GetPublicMessagesAsync();
             return View("Index", result);
         }
 
-        // GET: ChatController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: ChatController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: ChatController/Create
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Add(MessageDto message)
         {
-            try
+            AddMessageResult result = await MessageService.AddMessageAsync(message, UserName);
+            if (result.Status == EDbQueryStatus.Failure)
             {
-                return RedirectToAction(nameof(Index));
+                var error = new ErrorViewModel { ErrorMessage = result.ErrorMessage };
+                return View("Error", error);
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: ChatController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
 
         // POST: ChatController/Edit/5
         [HttpPost]

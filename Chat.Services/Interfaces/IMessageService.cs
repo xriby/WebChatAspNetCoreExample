@@ -7,8 +7,8 @@ namespace Chat.Services.Interfaces
 {
     public interface IMessageService : IDisposable
     {
-        Task<MessageDto> SendPublicMessageAsync(MessageDto messageDto);
+        Task<AddMessageResult> AddMessageAsync(MessageDto messageDto, string userName);
         Task<MessageDto> SendPrivateMessageAsync(MessageDto messageDto);
-        Task<GetMessagesResult> GetPublicMessagesAsync();
+        Task<GetMessageResult> GetPublicMessagesAsync();
     }
 }
