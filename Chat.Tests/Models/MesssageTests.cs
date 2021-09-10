@@ -1,6 +1,8 @@
 using Chat.Data.Models;
 using Chat.Data.ModelsDto;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
+using System.Text.Json;
 
 namespace Chat.Tests.Models
 {
@@ -24,6 +26,17 @@ namespace Chat.Tests.Models
             Message message = (Message)messageDto;
             Assert.AreEqual(id, message.MessageId);
             Assert.IsNull(message.User);
+        }
+        
+        [TestMethod]
+        public void TestMessageSerialize()
+        {
+            int id = 1;
+            var message = new MessageDto { MessageId = id, MessageType = EMessageType.Private };
+            string json = JsonSerializer.Serialize(message);
+            Debug.WriteLine(json);
+
+            Assert.IsTrue(json.Contains("Private"));
         }
     }
 }

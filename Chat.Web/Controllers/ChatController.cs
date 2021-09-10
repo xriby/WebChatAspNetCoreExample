@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Chat.Data;
+using Chat.Data.Common;
+using Chat.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +13,28 @@ namespace Chat.Web.Controllers
 {
     public class ChatController : Controller
     {
-        // GET: ChatController
-        public ActionResult Index()
+        private readonly ILogger<ChatController> Logger;
+        private readonly IDateTimeService DateTimeService;
+        private readonly IMessageService MessageService;
+        private readonly ChatDbContext Db;
+
+        public ChatController(ILogger<ChatController> logger,
+            IDateTimeService dateTimeService,
+            IMessageService messageService,
+            ChatDbContext db)
         {
-            return View();
+            Logger = logger;
+            DateTimeService = dateTimeService;
+            MessageService = messageService;
+            Db = db;
+        }
+
+        
+        public async Task<ActionResult> Index()
+        {
+            await MessageService.SendPrivateMessageAsync(null);
+            GetMessagesResult result = await MessageService.GetPublicMessagesAsync();
+            return View("Index", result);
         }
 
         // GET: ChatController/Details/5
@@ -82,6 +104,16 @@ namespace Chat.Web.Controllers
             {
                 return View();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Db.Dispose();
+                MessageService.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

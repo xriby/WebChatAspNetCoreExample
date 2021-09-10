@@ -44,7 +44,7 @@ namespace Chat.Data.Models
         public string RecipientId { get; set; }
         
         /// <summary>
-        /// Отправитель сообщения.
+        /// Пользователь отправитель.
         /// </summary>
         public virtual ApplicationUser User { get; set; }
 

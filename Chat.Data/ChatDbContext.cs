@@ -22,6 +22,7 @@ namespace Chat.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new ApplicationUserConfiguration());
+            modelBuilder.ApplyConfiguration(new MessageConfiguration());
         }
     }
 }

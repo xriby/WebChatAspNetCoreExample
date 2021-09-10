@@ -15,8 +15,9 @@ namespace Chat.Data.Identity
         public string Address { get; set; }
 
         /// <summary>
-        /// Отравленные сообщения.
+        /// Сообщения.
         /// </summary>
         public virtual ICollection<Message> Messages { get; set; }
+        
     }
 }

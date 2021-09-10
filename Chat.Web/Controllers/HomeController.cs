@@ -18,28 +18,19 @@ namespace Chat.Web.Controllers
     {
         private readonly ILogger<HomeController> Logger;
         private readonly IDateTimeService DateTimeService;
-        private readonly IMessageService MessageService;
-        private readonly ChatDbContext Db;
 
         public HomeController(ILogger<HomeController> logger,
-            IDateTimeService dateTimeService,
-            IMessageService messageService,
-            ChatDbContext db)
+            IDateTimeService dateTimeService)
         {
             Logger = logger;
             DateTimeService = dateTimeService;
-            MessageService = messageService;
-            Db = db;
+
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public IActionResult Index()
         {
             Logger.LogInformation("Hello, this is the index!");
             Logger.LogInformation($"Now: {DateTimeService.UtcNow:dd.MM.yyyy HH:mm}");
-            Logger.LogInformation($"Firsrt user: {Db.Users.FirstOrDefault()?.UserName}");
-
-            await MessageService.SendPrivateMessage(null);
-
 
             return View();
         }
@@ -55,14 +46,6 @@ namespace Chat.Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Db.Dispose();
-                MessageService.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+
     }
 }
