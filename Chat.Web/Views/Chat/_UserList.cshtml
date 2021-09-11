@@ -1,0 +1,9 @@
+﻿@model IEnumerable<Chat.Data.Identity.ApplicationUser>
+
+<div>
+    @foreach (var item in Model)
+        {
+            <p><a asp-controller="Chat" asp-action="Private" asp-route-with="@item.UserName" title="Отправить личное сообщение">@item.UserName</a></p>
+        }
+</div>
+

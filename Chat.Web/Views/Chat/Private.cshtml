@@ -1,0 +1,70 @@
+﻿@using Chat.Data.ModelsDto
+@using Chat.Data.Models
+@model Chat.Data.Common.PrivateMessageInfoResult
+
+@{
+    ViewData["Title"] = "Приватный чат";
+
+    var message = new MessageDto { MessageType = EMessageType.Private };
+}
+
+<h2>@ViewData["Title"]</h2>
+
+
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-header"><h4>С пользователем @Model.ToUser.UserName</h4></div>
+            <div class="card-body fixed-panel">
+                @foreach (var item in Model.Messages)
+                {
+                    <div class="media">
+                        <div class="media-body">
+                            <p>
+                                <b>@Html.DisplayFor(modelItem => item.User.UserName)</b>
+                                <small class="text-muted">[@item.CreateDate.ToString("dd.MM.yyyy HH:mm")]</small>
+                                @Html.DisplayFor(modelItem => item.Text)
+                            </p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div id="AddMessage">
+            <form asp-action="Add" asp-controller="Chat" method="POST" asp-antiforgery="true"
+                  data-ajax="true" 
+                  data-ajax-method="POST" 
+                  data-ajax-success="OnAddSuccess"
+                  data-ajax-failure="OnAddFailure">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="@message.MessageType" />
+                <input type="hidden" asp-for="@message.RecipientId" value="@Model.ToUser.Id" />
+                <div class="form-group">
+                    <label asp-for="@message.Text" class="control-label"></label>
+                    <input asp-for="@message.Text" class="form-control" />
+                    <span asp-validation-for="@message.Text" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Отправить" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-header"><h5>Пользователи</h5></div>
+            <div class="card-body fixed-panel">
+                @await Html.PartialAsync("_UserList", Model.Users)
+            </div>
+        </div>
+        <br />
+        <button class="btn btn-outline-secondary" onclick="window.location.reload(false); return false;">Обновить страницу</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js" integrity="sha512-DedNBWPF0hLGUPNbCYfj8qjlEnNE92Fqn7xd3Sscfu7ipy7Zu33unHdugqRD3c4Vj7/yLv+slqZhMls/4Oc7Zg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/js/add-message.js"></script>
+}

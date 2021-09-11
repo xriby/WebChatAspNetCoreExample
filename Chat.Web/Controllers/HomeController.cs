@@ -1,4 +1,9 @@
-﻿using Chat.Web.Models;
+﻿using Chat.Data;
+using Chat.Data.Models;
+using Chat.Data.ModelsDto;
+using Chat.Services;
+using Chat.Services.Interfaces;
+using Chat.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,16 +16,22 @@ namespace Chat.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> Logger;
+        private readonly IDateTimeService DateTimeService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,
+            IDateTimeService dateTimeService)
         {
-            _logger = logger;
+            Logger = logger;
+            DateTimeService = dateTimeService;
+
         }
 
         public IActionResult Index()
         {
-            _logger.LogInformation("Hello, this is the index!");
+            Logger.LogInformation("Hello, this is the index!");
+            Logger.LogInformation($"Now: {DateTimeService.UtcNow:dd.MM.yyyy HH:mm}");
+
             return View();
         }
 
@@ -34,5 +45,7 @@ namespace Chat.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
     }
 }
