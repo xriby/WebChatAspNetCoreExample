@@ -1,16 +1,11 @@
 ﻿using Chat.Common;
-using Chat.Data;
 using Chat.Data.Common;
 using Chat.Data.ModelsDto;
 using Chat.Services.Interfaces;
 using Chat.Web.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -23,7 +18,7 @@ namespace Chat.Web.Controllers
         private readonly IDateTimeService DateTimeService;
         private readonly IMessageService MessageService;
         private readonly IUserService UserService;
-        
+
         public ChatController(ILogger<ChatController> logger,
             IDateTimeService dateTimeService,
             IMessageService messageService,
@@ -60,7 +55,7 @@ namespace Chat.Web.Controllers
             AddMessageResult result = await MessageService.AddMessageAsync(message, UserName);
             return Content(JsonSerializer.Serialize(result), "application/json", Encoding.UTF8);
         }
-        
+
         /// <summary>
         /// Приватный чат.
         /// </summary>

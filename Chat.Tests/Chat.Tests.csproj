@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="MockQueryable.Moq" Version="5.0.1" />
+    <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
     <PackageReference Include="coverlet.collector" Version="3.0.2" />
@@ -15,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chat.Data\Chat.Data.csproj" />
+    <ProjectReference Include="..\Chat.Services\Chat.Services.csproj" />
   </ItemGroup>
 
 </Project>

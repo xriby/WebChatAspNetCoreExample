@@ -11,6 +11,10 @@ namespace Chat.Data
 {
     public class ChatDbContext : IdentityDbContext<ApplicationUser>
     {
+        public ChatDbContext()
+        {
+        }
+
         public ChatDbContext(DbContextOptions<ChatDbContext> options)
             : base(options)
         {
