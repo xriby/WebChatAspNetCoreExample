@@ -1,10 +1,6 @@
 ﻿using Chat.Data.Identity;
 using Chat.Data.ModelsDto;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chat.Data.Models
 {
@@ -42,12 +38,15 @@ namespace Chat.Data.Models
         /// Получатель сообщения.
         /// </summary>
         public string RecipientId { get; set; }
-        
+
         /// <summary>
         /// Пользователь отправитель.
         /// </summary>
         public virtual ApplicationUser User { get; set; }
 
+        /// <summary>
+        /// Перегружаем операцию преобразования
+        /// </summary>
         public static explicit operator Message(MessageDto messageDto)
         {
             return new Message

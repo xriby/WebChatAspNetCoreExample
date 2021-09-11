@@ -1,15 +1,14 @@
 ﻿using Chat.Data.Identity;
 using Chat.Data.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Chat.Data.ModelsDto
 {
+    /// <summary>
+    /// Модель сообщения передачи данных.
+    /// </summary>
     public class MessageDto
     {
         /// <summary>
@@ -22,8 +21,8 @@ namespace Chat.Data.ModelsDto
         /// Текст сообщения.
         /// </summary>
         [Required(ErrorMessage = "Введите текст")]
-        [MaxLength(512)]
-        [MinLength(2)]
+        [MaxLength(512, ErrorMessage = "Максимальная длина 512 символов")]
+        [MinLength(2, ErrorMessage = "Минимальная длина 2 символа")]
         [Display(Name = "Текст сообщения")]
         public string Text { get; set; }
 
@@ -47,17 +46,15 @@ namespace Chat.Data.ModelsDto
         /// Получатель сообщения.
         /// </summary>
         public string RecipientId { get; set; }
-        
-        /// <summary>
-        /// Получатель сообщения.
-        /// </summary>
-        public string RecipientUserName { get; set; }
 
         /// <summary>
         /// Отправитель сообщения.
         /// </summary>
         public ApplicationUser User { get; set; }
 
+        /// <summary>
+        /// Перегружаем операцию преобразования
+        /// </summary>
         public static explicit operator MessageDto(Message message)
         {
             return new MessageDto
