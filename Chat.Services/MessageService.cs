@@ -36,7 +36,7 @@ namespace Chat.Services
         /// <inheritdoc />
         public async Task<AddMessageResult> AddMessageAsync(MessageDto messageDto, string fromUser)
         {
-            int maxTextLength = 512;
+            int maxTextLength = ChatConfiguration.MaxTextLength;
             var result = new AddMessageResult { Status = EDbQueryStatus.Success };
             if (string.IsNullOrEmpty(messageDto.Text))
             {
