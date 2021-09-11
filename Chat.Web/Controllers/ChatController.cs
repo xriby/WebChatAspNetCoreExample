@@ -11,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Chat.Web.Controllers
@@ -38,26 +40,31 @@ namespace Chat.Web.Controllers
         /// </summary>
         public string UserName => User.Identity.Name;
 
+        /// <summary>
+        /// Общий чат.
+        /// </summary>
         public async Task<ActionResult> Index()
         {
             MessageInfoResult result = await MessageService.GetMessageInfoAsync(UserName);
             return View("Index", result);
         }
 
+        /// <summary>
+        /// Добавить сообщение.
+        /// </summary>
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(MessageDto message)
         {
             AddMessageResult result = await MessageService.AddMessageAsync(message, UserName);
-            if (result.Status == EDbQueryStatus.Failure)
-            {
-                var error = new ErrorViewModel { ErrorMessage = result.ErrorMessage };
-                return View("Error", error);
-            }
-            return RedirectToAction(nameof(Index));
+            return Content(JsonSerializer.Serialize(result), "application/json", Encoding.UTF8);
         }
         
+        /// <summary>
+        /// Приватный чат.
+        /// </summary>
+        /// <param name="with">Имя пользователя</param>
         [Authorize]
         public async Task<ActionResult> Private(string with)
         {

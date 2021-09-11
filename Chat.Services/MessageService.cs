@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 
 namespace Chat.Services
 {
+    /// <summary>
+    /// Сервис сообщений.
+    /// </summary>
     public class MessageService : IMessageService
     {
         private readonly ILogger<MessageService> Logger;
@@ -28,12 +31,6 @@ namespace Chat.Services
             Logger = logger;
             UserService = userService;
             Db = db;
-        }
-
-        public async Task<AddMessageResult> AddPrivateMessageAsync(MessageDto messageDto, string fromUser, string toUser)
-        {
-            Logger.LogInformation("Start SendPrivateMessage.");
-            return null;
         }
 
         /// <inheritdoc />
@@ -122,6 +119,7 @@ namespace Chat.Services
             return result;
         }
 
+        /// <inheritdoc />
         public async Task<PrivateMessageInfoResult> GetPrivateMessageInfoAsync(string fromUser, string toUser)
         {
             var result = new PrivateMessageInfoResult { Status = EDbQueryStatus.Success };
@@ -140,15 +138,16 @@ namespace Chat.Services
                 result.ErrorMessage = $"Ошибка. Пользователь {toUser} не найден.";
                 return result;
             }
+            var privateUserIds = new string[] { userSender.Id, userRecipient.Id };
             result.ToUser = userRecipient;
             try
             {
-                // Возьмем последние 1000 сообщений, поскольку в примере не реализован постраничный вывод.
+                // Возьмем последние 1000 приватных сообщений м/у пользователями.
                 List<MessageDto> messages = await Db.Messages
                     .Include(x => x.User)
                     .Where(x => x.MessageType == EMessageType.Private)
-                    .Where(x => x.User.Id == userSender.Id)
-                    .Where(x => x.RecipientId == userRecipient.Id)
+                    .Where(x => privateUserIds.Contains(x.User.Id))
+                    .Where(x => privateUserIds.Contains(x.RecipientId))
                     .OrderByDescending(x => x.CreateDate)
                     .Take(1000)
                     .Select(x => (MessageDto)x)

@@ -32,7 +32,11 @@
             </div>
         </div>
         <div id="AddMessage">
-            <form asp-action="Add" asp-controller="Chat" method="POST" asp-antiforgery="true">
+            <form asp-action="Add" asp-controller="Chat" method="POST" asp-antiforgery="true"
+                  data-ajax="true" 
+                  data-ajax-method="POST" 
+                  data-ajax-success="OnAddSuccess"
+                  data-ajax-failure="OnAddFailure">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="@message.MessageType" />
                 <input type="hidden" asp-for="@message.RecipientId" value="@Model.ToUser.Id" />
@@ -54,16 +58,13 @@
                 @await Html.PartialAsync("_UserList", Model.Users)
             </div>
         </div>
-        @*@if (ViewBag.HaveUnreadMsg)
-            {
-                <p class="text-info">
-                    У вас непрочитанные сообщения от:<br />
-                    <b>@ViewBag.MessageFrom</b>
-                </p>
-            }*@
+        <br />
+        <button class="btn btn-outline-secondary" onclick="window.location.reload(false); return false;">Обновить страницу</button>
     </div>
 </div>
 
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js" integrity="sha512-DedNBWPF0hLGUPNbCYfj8qjlEnNE92Fqn7xd3Sscfu7ipy7Zu33unHdugqRD3c4Vj7/yLv+slqZhMls/4Oc7Zg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="~/js/add-message.js"></script>
 }

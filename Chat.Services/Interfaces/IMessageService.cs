@@ -5,12 +5,16 @@ using System.Threading.Tasks;
 
 namespace Chat.Services.Interfaces
 {
+    /// <summary>
+    /// Интерфейс сервиса сообщений.
+    /// </summary>
     public interface IMessageService : IDisposable
     {
+        /// <summary>
+        /// Добавить сообщение.
+        /// </summary>
         Task<AddMessageResult> AddMessageAsync(MessageDto messageDto, string fromName);
 
-        Task<AddMessageResult> AddPrivateMessageAsync(MessageDto messageDto, string fromUser, string toUser);
-        
         /// <summary>
         /// Получить информацию о сообщениях.
         /// </summary>
