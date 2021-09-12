@@ -2,7 +2,6 @@
 using Chat.Data.Common;
 using Chat.Data.ModelsDto;
 using Chat.Services.Interfaces;
-using Chat.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,17 +14,14 @@ namespace Chat.Web.Controllers
     public class ChatController : Controller
     {
         private readonly ILogger<ChatController> Logger;
-        private readonly IDateTimeService DateTimeService;
         private readonly IMessageService MessageService;
         private readonly IUserService UserService;
 
         public ChatController(ILogger<ChatController> logger,
-            IDateTimeService dateTimeService,
             IMessageService messageService,
             IUserService userService)
         {
             Logger = logger;
-            DateTimeService = dateTimeService;
             MessageService = messageService;
             UserService = userService;
         }

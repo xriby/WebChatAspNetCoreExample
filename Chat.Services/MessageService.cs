@@ -86,6 +86,10 @@ namespace Chat.Services
         /// <inheritdoc />
         public async Task<MessageInfoResult> GetMessageInfoAsync(string userName)
         {
+            if (userName == null)
+            {
+                throw new ArgumentNullException(nameof(userName));
+            }
             var result = new MessageInfoResult { Status = EDbQueryStatus.Success };
             try
             {

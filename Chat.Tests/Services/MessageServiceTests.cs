@@ -25,24 +25,27 @@ namespace Chat.Tests.Services
     public class MessageServiceTests
     {
         [TestMethod]
-        public async Task TestAddEmptyMessageAsync()
+        public async Task AddEmptyMessageAsync()
         {
+            //Arrange
             MessageService messageService = MockMessageService();
 
             var message = new MessageDto();
             string user = "user";
 
+            // Act
             AddMessageResult result = await messageService.AddMessageAsync(message, user);
 
+            // Assert
             Assert.AreEqual(EDbQueryStatus.Failure, result.Status);
             Assert.AreEqual("Ошибка. Введите сообщение.", result.ErrorMessage);
         }
         
         [TestMethod]
-        public async Task TestMaxTextAddMessageAsync()
+        public async Task MaxTextAddMessageAsync()
         {
             MessageService messageService = MockMessageService();
-            int moreThanMaxText = 600;
+            int moreThanMaxText = ChatConfiguration.MaxTextLength + 1;
 
             var message = new MessageDto { Text = new string('a', moreThanMaxText) };
             string user = "user";
@@ -54,7 +57,7 @@ namespace Chat.Tests.Services
         }
         
         [TestMethod]
-        public async Task TestEmptyUserAddMessageAsync()
+        public async Task EmptyUserAddMessageAsync()
         {
             MessageService messageService = MockMessageService();
 
@@ -67,7 +70,7 @@ namespace Chat.Tests.Services
         }
         
         [TestMethod]
-        public async Task TestNotFoundUserAddMessageAsync()
+        public async Task NotFoundUserAddMessageAsync()
         {
             Guid giud1 = Guid.NewGuid();
             Guid giud2 = Guid.NewGuid();
@@ -124,7 +127,7 @@ namespace Chat.Tests.Services
         }
         
         [TestMethod]
-        public async Task TestAddMessageAsync()
+        public async Task AddMessageAsync()
         {
             Guid giud1 = Guid.NewGuid();
             Guid giud2 = Guid.NewGuid();
@@ -177,6 +180,34 @@ namespace Chat.Tests.Services
             Assert.AreEqual(EDbQueryStatus.Success, result.Status);
             mockMessages.Verify(x => x.AddAsync(It.IsAny<Message>(), It.IsAny<CancellationToken>()), Times.Once);
             mockDb.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task NullUserGetMessageInfoAsync()
+        {
+            MessageService messageService = MockMessageService();
+
+            try
+            {
+                MessageInfoResult result = await messageService.GetMessageInfoAsync(null);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is ArgumentNullException);
+            }
+        }
+        
+        [TestMethod]
+        public async Task GetMessageInfoAsync()
+        {
+            MessageService messageService = MockMessageService();
+
+            string user = "user1";
+
+            MessageInfoResult result = await messageService.GetMessageInfoAsync(user);
+
+            Assert.AreEqual(EDbQueryStatus.Failure, result.Status);
+            
         }
 
         private static MessageService MockMessageService()

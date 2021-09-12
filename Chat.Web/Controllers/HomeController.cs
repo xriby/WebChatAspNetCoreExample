@@ -1,16 +1,8 @@
-﻿using Chat.Data;
-using Chat.Data.Models;
-using Chat.Data.ModelsDto;
-using Chat.Services;
+﻿using Chat.Data.ModelsDto;
 using Chat.Services.Interfaces;
-using Chat.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Chat.Web.Controllers
 {
