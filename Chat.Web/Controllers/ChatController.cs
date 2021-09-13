@@ -29,11 +29,12 @@ namespace Chat.Web.Controllers
         /// <summary>
         /// Имя пользователя текущего HTTP запроса
         /// </summary>
-        public string UserName => User.Identity.Name;
+        public string UserName => User?.Identity?.Name;
 
         /// <summary>
         /// Общий чат.
         /// </summary>
+        [Authorize]
         public async Task<ActionResult> Index()
         {
             MessageInfoResult result = await MessageService.GetMessageInfoAsync(UserName);

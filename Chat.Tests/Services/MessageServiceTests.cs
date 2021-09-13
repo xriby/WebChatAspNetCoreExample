@@ -27,7 +27,7 @@ namespace Chat.Tests.Services
         [TestMethod]
         public async Task AddEmptyMessageAsync()
         {
-            //Arrange
+            // Arrange
             MessageService messageService = MockMessageService();
 
             var message = new MessageDto();
@@ -200,14 +200,150 @@ namespace Chat.Tests.Services
         [TestMethod]
         public async Task GetMessageInfoAsync()
         {
-            MessageService messageService = MockMessageService();
+            Guid giud1 = Guid.NewGuid();
+            Guid giud2 = Guid.NewGuid();
+            Guid giud3 = Guid.NewGuid();
+            var user1 = new ApplicationUser { Id = giud1.ToString(), UserName = "user1" };
+            var user2 = new ApplicationUser { Id = giud2.ToString(), UserName = "user2" };
+            var user3 = new ApplicationUser { Id = giud3.ToString(), UserName = "user3" };
+            var users = new List<ApplicationUser> { user1, user2, user3 };
+            var messages = new List<Message>
+            {
+                new Message
+                {
+                    MessageId = 1,
+                    Text = "Message1",
+                    MessageType = EMessageType.Public,
+                    CreateDate = DateTime.UtcNow,
+                    User = user1
+                },
+                new Message
+                {
+                    MessageId = 2,
+                    Text = "Message2",
+                    MessageType = EMessageType.Public,
+                    CreateDate = DateTime.UtcNow,
+                    User = user2
+                }
+            };
 
-            string user = "user1";
+            var mockDb = new Mock<ChatDbContext>();
+            var mockUserService = new Mock<IUserService>();
+            var mockLogger = new Mock<ILogger<MessageService>>();
 
-            MessageInfoResult result = await messageService.GetMessageInfoAsync(user);
+            var mockUsers = users.AsQueryable().BuildMockDbSet();
+            var mockMessages = messages.AsQueryable().BuildMockDbSet();
 
-            Assert.AreEqual(EDbQueryStatus.Failure, result.Status);
+            mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
+            mockDb.Object.Messages = mockMessages.Object;
+
+            var usersResult = new GetUsersResult { Status = EDbQueryStatus.Success, Data = users };
+
+            mockUserService.Setup(x => x.GetUsersAsync(user1.UserName)).ReturnsAsync(usersResult);
+
+            var messageService = new MessageService(mockLogger.Object,
+                mockUserService.Object,
+                mockDb.Object);
             
+            MessageInfoResult result = await messageService.GetMessageInfoAsync(user1.UserName);
+
+            Assert.AreEqual(EDbQueryStatus.Success, result.Status);
+            Assert.AreEqual(users.Count, result.Users.Count);
+            Assert.AreEqual(messages.Count, result.Messages.Count);
+            mockUserService.Verify(x => x.GetUsersAsync(It.IsAny<string>()), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task NullUserGetPrivateMessageInfoAsync()
+        {
+            MessageService messageService = MockMessageService();
+            string fromUser = "user1";
+            string toUser = "user2";
+            
+            try
+            {
+                PrivateMessageInfoResult result = await messageService.GetPrivateMessageInfoAsync(null, toUser);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is ArgumentNullException);
+            }
+            
+            try
+            {
+                PrivateMessageInfoResult result = await messageService.GetPrivateMessageInfoAsync(fromUser, null);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is ArgumentNullException);
+            }
+        }
+
+        [TestMethod]
+        public async Task GetPrivateMessageInfoAsync()
+        {
+            Guid guid1 = Guid.NewGuid();
+            Guid guid2 = Guid.NewGuid();
+            Guid guid3 = Guid.NewGuid();
+            var user1 = new ApplicationUser { Id = guid1.ToString(), UserName = "user1" };
+            var user2 = new ApplicationUser { Id = guid2.ToString(), UserName = "user2" };
+            var user3 = new ApplicationUser { Id = guid3.ToString(), UserName = "user3" };
+            var users = new List<ApplicationUser> { user1, user2, user3 };
+            // В списке два приватных сообщения м/у user1 и user2
+            var messages = new List<Message>
+            {
+                new Message
+                {
+                    MessageId = 1,
+                    Text = "Message1",
+                    MessageType = EMessageType.Private,
+                    CreateDate = DateTime.UtcNow,
+                    User = user1,
+                    RecipientId = guid2.ToString()
+                },
+                new Message
+                {
+                    MessageId = 2,
+                    Text = "Message2",
+                    MessageType = EMessageType.Private,
+                    CreateDate = DateTime.UtcNow,
+                    User = user2,
+                    RecipientId = guid2.ToString()
+                },
+                new Message
+                {
+                    MessageId = 3,
+                    Text = "Message3",
+                    MessageType = EMessageType.Public,
+                    CreateDate = DateTime.UtcNow,
+                    User = user2
+                }
+            };
+
+            var mockDb = new Mock<ChatDbContext>();
+            var mockUserService = new Mock<IUserService>();
+            var mockLogger = new Mock<ILogger<MessageService>>();
+
+            var mockUsers = users.AsQueryable().BuildMockDbSet();
+            var mockMessages = messages.AsQueryable().BuildMockDbSet();
+
+            mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
+            mockDb.Object.Messages = mockMessages.Object;
+
+            var usersResult = new GetUsersResult { Status = EDbQueryStatus.Success, Data = users };
+
+            mockUserService.Setup(x => x.GetUsersAsync(user1.UserName)).ReturnsAsync(usersResult);
+
+            var messageService = new MessageService(mockLogger.Object,
+                mockUserService.Object,
+                mockDb.Object);
+
+            PrivateMessageInfoResult result = await messageService.GetPrivateMessageInfoAsync(user1.UserName, user2.UserName);
+
+            Assert.AreEqual(EDbQueryStatus.Success, result.Status);
+            Assert.AreEqual(users.Count, result.Users.Count);
+            Assert.AreEqual(2, result.Messages.Count);
+            mockUserService.Verify(x => x.GetUsersAsync(It.IsAny<string>()), Times.Once);
         }
 
         private static MessageService MockMessageService()

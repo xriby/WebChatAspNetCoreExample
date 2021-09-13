@@ -71,6 +71,7 @@ namespace Chat.Services
             {
                 await Db.Messages.AddAsync(message);
                 await Db.SaveChangesAsync();
+                result.Data = (MessageDto)message;
             }
             catch (Exception ex)
             {
@@ -126,6 +127,14 @@ namespace Chat.Services
         /// <inheritdoc />
         public async Task<PrivateMessageInfoResult> GetPrivateMessageInfoAsync(string fromUser, string toUser)
         {
+            if (fromUser == null)
+            {
+                throw new ArgumentNullException(nameof(fromUser));
+            }
+            if (toUser == null)
+            {
+                throw new ArgumentNullException(nameof(toUser));
+            }
             var result = new PrivateMessageInfoResult { Status = EDbQueryStatus.Success };
             ApplicationUser userSender = await Db.Users.FirstOrDefaultAsync(x => x.UserName == fromUser);
             if (userSender == null)
