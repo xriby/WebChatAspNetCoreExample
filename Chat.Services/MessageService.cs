@@ -71,6 +71,7 @@ namespace Chat.Services
             {
                 await Db.Messages.AddAsync(message);
                 await Db.SaveChangesAsync();
+                result.Data = (MessageDto)message;
             }
             catch (Exception ex)
             {

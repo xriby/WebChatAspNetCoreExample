@@ -250,6 +250,7 @@ namespace Chat.Tests.Services
             Assert.AreEqual(EDbQueryStatus.Success, result.Status);
             Assert.AreEqual(users.Count, result.Users.Count);
             Assert.AreEqual(messages.Count, result.Messages.Count);
+            mockUserService.Verify(x => x.GetUsersAsync(It.IsAny<string>()), Times.Once);
         }
 
         [TestMethod]
@@ -342,7 +343,7 @@ namespace Chat.Tests.Services
             Assert.AreEqual(EDbQueryStatus.Success, result.Status);
             Assert.AreEqual(users.Count, result.Users.Count);
             Assert.AreEqual(2, result.Messages.Count);
-
+            mockUserService.Verify(x => x.GetUsersAsync(It.IsAny<string>()), Times.Once);
         }
 
         private static MessageService MockMessageService()
