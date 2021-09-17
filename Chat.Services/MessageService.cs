@@ -101,6 +101,7 @@ namespace Chat.Services
                     .OrderByDescending(x => x.CreateDate)
                     .Take(1000)
                     .Select(x => (MessageDto)x)
+                    .AsNoTracking()
                     .ToListAsync();
                 result.Messages = messages;
 
@@ -136,7 +137,9 @@ namespace Chat.Services
                 throw new ArgumentNullException(nameof(toUser));
             }
             var result = new PrivateMessageInfoResult { Status = EDbQueryStatus.Success };
-            ApplicationUser userSender = await Db.Users.FirstOrDefaultAsync(x => x.UserName == fromUser);
+            ApplicationUser userSender = await Db.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserName == fromUser);
             if (userSender == null)
             {
                 result.Status = EDbQueryStatus.Failure;
@@ -144,7 +147,9 @@ namespace Chat.Services
                 return result;
             }
             result.FromUser = userSender;
-            ApplicationUser userRecipient = await Db.Users.FirstOrDefaultAsync(x => x.UserName == toUser);
+            ApplicationUser userRecipient = await Db.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserName == toUser);
             if (userRecipient == null)
             {
                 result.Status = EDbQueryStatus.Failure;
@@ -164,6 +169,7 @@ namespace Chat.Services
                     .OrderByDescending(x => x.CreateDate)
                     .Take(1000)
                     .Select(x => (MessageDto)x)
+                    .AsNoTracking()
                     .ToListAsync();
                 result.Messages = messages;
 

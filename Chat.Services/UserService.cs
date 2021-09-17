@@ -35,7 +35,10 @@ namespace Chat.Services
             var result = new GetUsersResult { Status = EDbQueryStatus.Success };
             try
             {
-                List<ApplicationUser> users = await Db.Users.OrderBy(x => x.UserName).ToListAsync();
+                List<ApplicationUser> users = await Db.Users
+                    .OrderBy(x => x.UserName)
+                    .AsNoTracking()
+                    .ToListAsync();
                 if (users?.Count > 0 && !string.IsNullOrEmpty(excludeUserName))
                 {
                     ApplicationUser excludeUser = users.FirstOrDefault(x => x.UserName == excludeUserName);

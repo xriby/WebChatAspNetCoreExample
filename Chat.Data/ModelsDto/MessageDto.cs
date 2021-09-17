@@ -48,9 +48,14 @@ namespace Chat.Data.ModelsDto
         public string RecipientId { get; set; }
 
         /// <summary>
-        /// Отправитель сообщения.
+        /// Имя отправителя сообщения.
         /// </summary>
-        public ApplicationUser User { get; set; }
+        public string UserName { get; set; }
+        
+        /// <summary>
+        /// Идентификатор отправителя сообщения.
+        /// </summary>
+        public string UserId { get; set; }
 
         /// <summary>
         /// Перегружаем операцию преобразования
@@ -65,7 +70,8 @@ namespace Chat.Data.ModelsDto
                 MessageType = message.MessageType,
                 RecipientId = message.RecipientId,
                 Viewed = message.Viewed,
-                User = message.User
+                UserId = message.User?.Id,
+                UserName = message.User?.UserName
             };
         }
     }
