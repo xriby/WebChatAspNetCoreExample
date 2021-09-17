@@ -57,7 +57,6 @@ namespace Chat.Data.Models
                 MessageType = messageDto.MessageType,
                 RecipientId = messageDto.RecipientId,
                 Viewed = messageDto.Viewed,
-                User = messageDto.User
             };
         }
     }
