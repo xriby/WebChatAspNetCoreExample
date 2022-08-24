@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Services.Hosted;
 
 namespace Chat.Web
 {
@@ -30,21 +31,17 @@ namespace Chat.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ChatDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"),
-                    x => x.MigrationsAssembly("Chat.Data")));
+            services.AddDataInfrastructure(Configuration);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ChatDbContext>();
 
             services.AddControllersWithViews();
 
             services.AddTransient<IDateTimeService, DateTimeService>();
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<IUserService, UserService>();
+
+            services.AddHostedService<MigrateService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

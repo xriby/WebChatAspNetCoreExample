@@ -19,6 +19,7 @@ namespace Chat.Data
             : base(options)
         {
         }
+
         public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
