@@ -34,10 +34,7 @@ namespace Chat.Services.Hosted
             }
             catch (Exception exception)
             {
-                if (_logger.IsEnabled(LogLevel.Error))
-                {
-                    _logger.LogError($"Произошла ошибка при выполнении миграций. {exception.Message}");
-                }
+                _logger.LogError($"Произошла ошибка при выполнении миграций. {exception.Message}");
             }
         }
     }
