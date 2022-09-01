@@ -1,8 +1,8 @@
-﻿using Chat.Data.Identity;
-using Chat.Data.ModelsDto;
-using System;
+﻿using System;
+using Chat.Infrastructure.Identity;
+using Chat.Infrastructure.ModelsDto;
 
-namespace Chat.Data.Models
+namespace Chat.Infrastructure.Models
 {
     /// <summary>
     /// Модель сообщения.

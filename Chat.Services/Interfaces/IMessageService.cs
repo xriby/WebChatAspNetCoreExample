@@ -1,7 +1,7 @@
-﻿using Chat.Data.Common;
-using Chat.Data.ModelsDto;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Chat.Infrastructure.Common;
+using Chat.Infrastructure.ModelsDto;
 
 namespace Chat.Services.Interfaces
 {

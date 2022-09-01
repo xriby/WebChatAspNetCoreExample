@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Web", "Chat.Web\Chat.Web.csproj", "{71B6A809-9F9E-4733-8EF8-2C5F09518C8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Data", "Chat.Data\Chat.Data.csproj", "{1EE83D6F-3319-4CD0-A41B-A47F70264130}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Infrastructure", "Chat.Data\Chat.Infrastructure.csproj", "{1EE83D6F-3319-4CD0-A41B-A47F70264130}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Services", "Chat.Services\Chat.Services.csproj", "{FD8B9018-CFFB-4935-8D59-93660E5CE7B1}"
 EndProject
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Tests", "Chat.Tests\Ch
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{586DBC07-EF21-41F8-AF04-27DC4DA44C72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Common", "Chat.Common\Chat.Common.csproj", "{9A3F8643-915B-4760-B1A3-D532781DE6B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Common", "Chat.Common\Chat.Common.csproj", "{9A3F8643-915B-4760-B1A3-D532781DE6B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

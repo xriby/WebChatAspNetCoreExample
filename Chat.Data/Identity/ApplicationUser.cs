@@ -1,8 +1,8 @@
-﻿using Chat.Data.Models;
+﻿using System.Collections.Generic;
+using Chat.Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 
-namespace Chat.Data.Identity
+namespace Chat.Infrastructure.Identity
 {
     /// <summary>
     /// Модель пользователя.

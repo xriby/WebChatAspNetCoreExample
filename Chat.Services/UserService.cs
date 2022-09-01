@@ -1,7 +1,5 @@
 ﻿using Chat.Common;
 using Chat.Data;
-using Chat.Data.Common;
-using Chat.Data.Identity;
 using Chat.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,6 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Chat.Infrastructure;
+using Chat.Infrastructure.Common;
+using Chat.Infrastructure.Identity;
 
 namespace Chat.Services
 {

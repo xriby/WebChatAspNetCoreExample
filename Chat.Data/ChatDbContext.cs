@@ -1,13 +1,10 @@
-﻿using Chat.Data.Identity;
-using Chat.Data.Models;
-using Chat.Data.ModelsConfiguration;
+﻿using Chat.Infrastructure.Identity;
+using Chat.Infrastructure.Models;
+using Chat.Infrastructure.ModelsConfiguration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Chat.Data
+namespace Chat.Infrastructure
 {
     public class ChatDbContext : IdentityDbContext<ApplicationUser>
     {

@@ -1,9 +1,9 @@
-﻿using Chat.Data.Identity;
+﻿using Chat.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Chat.Data
+namespace Chat.Infrastructure
 {
     public static class DependencyInjection
     {
@@ -13,7 +13,7 @@ namespace Chat.Data
 
             services.AddDbContext<ChatDbContext>(options =>
                 options.UseNpgsql(efConnectionString,
-                    x => x.MigrationsAssembly("Chat.Data")));
+                    x => x.MigrationsAssembly("Chat.Infrastructure")));
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ChatDbContext>();

@@ -1,10 +1,9 @@
-﻿using Chat.Data.Identity;
-using Chat.Data.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Chat.Infrastructure.Models;
 
-namespace Chat.Data.ModelsDto
+namespace Chat.Infrastructure.ModelsDto
 {
     /// <summary>
     /// Модель сообщения передачи данных.

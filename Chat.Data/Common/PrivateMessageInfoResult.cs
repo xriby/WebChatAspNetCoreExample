@@ -1,9 +1,9 @@
-﻿using Chat.Common;
-using Chat.Data.Identity;
-using Chat.Data.ModelsDto;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Chat.Common;
+using Chat.Infrastructure.Identity;
+using Chat.Infrastructure.ModelsDto;
 
-namespace Chat.Data.Common
+namespace Chat.Infrastructure.Common
 {
     public class PrivateMessageInfoResult : DbQueryResultModel<int>
     {

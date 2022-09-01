@@ -1,22 +1,13 @@
-using Chat.Data;
-using Chat.Data.Identity;
+using Chat.Infrastructure;
 using Chat.Services;
+using Chat.Services.Hosted;
 using Chat.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Chat.Services.Hosted;
-using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Chat.Web
 {

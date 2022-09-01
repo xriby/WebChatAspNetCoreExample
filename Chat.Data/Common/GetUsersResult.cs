@@ -1,8 +1,8 @@
-﻿using Chat.Common;
-using Chat.Data.Identity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Chat.Common;
+using Chat.Infrastructure.Identity;
 
-namespace Chat.Data.Common
+namespace Chat.Infrastructure.Common
 {
     public class GetUsersResult : DbQueryResultModel<List<ApplicationUser>>
     {

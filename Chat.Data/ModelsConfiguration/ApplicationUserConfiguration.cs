@@ -1,8 +1,8 @@
-﻿using Chat.Data.Identity;
+﻿using Chat.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Chat.Data.ModelsConfiguration
+namespace Chat.Infrastructure.ModelsConfiguration
 {
     /// <summary>
     /// Конфигурация модели пользователь.

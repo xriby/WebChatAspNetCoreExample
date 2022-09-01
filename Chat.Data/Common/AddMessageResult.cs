@@ -1,7 +1,7 @@
 ﻿using Chat.Common;
-using Chat.Data.ModelsDto;
+using Chat.Infrastructure.ModelsDto;
 
-namespace Chat.Data.Common
+namespace Chat.Infrastructure.Common
 {
     public class AddMessageResult : DbQueryResultModel<MessageDto>
     {

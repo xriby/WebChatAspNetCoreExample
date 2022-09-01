@@ -1,9 +1,9 @@
-﻿using Chat.Data.Identity;
-using Chat.Data.Models;
+﻿using Chat.Infrastructure.Identity;
+using Chat.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Chat.Data.ModelsConfiguration
+namespace Chat.Infrastructure.ModelsConfiguration
 {
     public class MessageConfiguration : IEntityTypeConfiguration<Message>
     {

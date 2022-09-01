@@ -1,6 +1,6 @@
-﻿using Chat.Data.Common;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Chat.Infrastructure.Common;
 
 namespace Chat.Services.Interfaces
 {

@@ -1,6 +1,4 @@
 ﻿using Chat.Common;
-using Chat.Data.Common;
-using Chat.Data.ModelsDto;
 using Chat.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Chat.Infrastructure.Common;
+using Chat.Infrastructure.ModelsDto;
 
 namespace Chat.Web.Controllers
 {
