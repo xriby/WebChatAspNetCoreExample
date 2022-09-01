@@ -1,5 +1,4 @@
 ﻿using Chat.Common;
-using Chat.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MockQueryable.Moq;

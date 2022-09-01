@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="Data\**" />
+    <Compile Remove="Log\**" />
     <Content Remove="Data\**" />
+    <Content Remove="Log\**" />
     <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Log\**" />
     <None Remove="Data\**" />
+    <None Remove="Log\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,8 +32,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Chat.Data\Chat.Infrastructure.csproj" />
-    <ProjectReference Include="..\Chat.Services\Chat.Application.csproj" />
+    <ProjectReference Include="..\Chat.Infrastructure\Chat.Infrastructure.csproj" />
+    <ProjectReference Include="..\Chat.Application\Chat.Application.csproj" />
   </ItemGroup>
 
 </Project>
