@@ -1,18 +1,16 @@
-﻿using Chat.Common;
-using Chat.Data;
-using Chat.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Chat.Application.Interfaces;
+using Chat.Common;
 using Chat.Infrastructure;
 using Chat.Infrastructure.Common;
 using Chat.Infrastructure.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-namespace Chat.Services
+namespace Chat.Application
 {
     /// <summary>
     /// Сервис работы с пользователями.

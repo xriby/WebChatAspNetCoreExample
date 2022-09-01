@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Chat.Infrastructure.Common;
 using Chat.Infrastructure.ModelsDto;
 
-namespace Chat.Services.Interfaces
+namespace Chat.Application.Interfaces
 {
     /// <summary>
     /// Интерфейс сервиса сообщений.

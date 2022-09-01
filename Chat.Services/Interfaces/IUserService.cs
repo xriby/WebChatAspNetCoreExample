@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Chat.Infrastructure.Common;
 
-namespace Chat.Services.Interfaces
+namespace Chat.Application.Interfaces
 {
     /// <summary>
     /// Интерфейс сервиса работы с пользователями.

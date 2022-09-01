@@ -1,7 +1,7 @@
-﻿using Chat.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using Chat.Application.Interfaces;
 using Chat.Infrastructure.ModelsDto;
 
 namespace Chat.Web.Controllers

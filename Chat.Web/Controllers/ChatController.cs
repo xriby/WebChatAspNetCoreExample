@@ -1,11 +1,11 @@
 ﻿using Chat.Common;
-using Chat.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Chat.Application.Interfaces;
 using Chat.Infrastructure.Common;
 using Chat.Infrastructure.ModelsDto;
 

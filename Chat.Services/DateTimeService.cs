@@ -1,7 +1,7 @@
-﻿using Chat.Services.Interfaces;
-using System;
+﻿using System;
+using Chat.Application.Interfaces;
 
-namespace Chat.Services
+namespace Chat.Application
 {
     public class DateTimeService : IDateTimeService
     {

@@ -1,5 +1,4 @@
 ﻿using Chat.Common;
-using Chat.Services.Interfaces;
 using Chat.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Chat.Application.Interfaces;
 using Chat.Infrastructure.Common;
 using Chat.Infrastructure.Identity;
 using Chat.Infrastructure.Models;

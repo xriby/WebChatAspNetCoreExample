@@ -1,7 +1,7 @@
+using Chat.Application;
+using Chat.Application.Hosted;
+using Chat.Application.Interfaces;
 using Chat.Infrastructure;
-using Chat.Services;
-using Chat.Services.Hosted;
-using Chat.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
