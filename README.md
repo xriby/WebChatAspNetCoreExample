@@ -13,7 +13,7 @@
 
 ## В решении используется
 
-* Для хранения данных: MS SQL Server (ORM: Entity Framework Core)
+* Для хранения данных: PostgreSQL (ORM: Entity Framework Core)
 * Для управления пользователями: ASP.NET Core Identity.
 * Для логов: NLog
 * Для тестирования: Moq, MockQueryable.Moq
@@ -22,6 +22,6 @@
 
 * Chat.Tests - проект юнит тестов
 * Chat.Common - общий проект для классов хелперов и классов расширений
-* Chat.Data - проект сущностей и данных приложения
-* Chat.Services - проект сервисов приложения (бизнес-логика)
+* Chat.Infrastructure - проект инфраструктуры приложения
+* Chat.Application - проект сервисов приложения
 * Chat.Web - проект веб-приложения (ASP.NET Core MVC)

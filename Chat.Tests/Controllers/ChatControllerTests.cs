@@ -1,9 +1,4 @@
 ﻿using Chat.Common;
-using Chat.Data.Common;
-using Chat.Data.Identity;
-using Chat.Data.Models;
-using Chat.Data.ModelsDto;
-using Chat.Services.Interfaces;
 using Chat.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,6 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Chat.Application.Interfaces;
+using Chat.Infrastructure.Common;
+using Chat.Infrastructure.Identity;
+using Chat.Infrastructure.Models;
+using Chat.Infrastructure.ModelsDto;
 
 namespace Chat.Tests.Controllers
 {
