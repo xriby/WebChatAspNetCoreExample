@@ -1,5 +1,4 @@
-﻿using Chat.Common;
-using Chat.Web.Controllers;
+﻿using Chat.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

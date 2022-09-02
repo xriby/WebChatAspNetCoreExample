@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Application.Common;
 using Chat.Application.Identity;
 using Chat.Application.Interfaces;
+using Chat.Application.Interfaces.Repositories;
 using Chat.Application.Models;
 using Chat.Application.ModelsDto;
 using Chat.Application.Results;
-using Chat.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -18,18 +19,21 @@ namespace Chat.Application
     /// </summary>
     public class MessageService : IMessageService
     {
-        private readonly ILogger<MessageService> Logger;
-        private readonly IUserService UserService;
-        private readonly ChatDbContext Db;
+        private readonly ILogger<MessageService> _logger;
+        private readonly IUserService _userService;
+        private readonly IMessageRepository _messageRepository;
+        private readonly IUserRepository _userRepository;
         private bool disposed = false;
 
         public MessageService(ILogger<MessageService> logger,
             IUserService userService,
-            ChatDbContext db)
+            IMessageRepository messageRepository, 
+            IUserRepository userRepository)
         {
-            Logger = logger;
-            UserService = userService;
-            Db = db;
+            _logger = logger;
+            _userService = userService;
+            _messageRepository = messageRepository;
+            _userRepository = userRepository;
         }
 
         /// <inheritdoc />
@@ -55,7 +59,7 @@ namespace Chat.Application
                 result.ErrorMessage = "Ошибка. Не задан пользователь.";
                 return result;
             }
-            ApplicationUser user = await Db.Users.FirstOrDefaultAsync(x => x.UserName == fromUser);
+            ApplicationUser user = await _userRepository.GetAllQueryable().FirstOrDefaultAsync(x => x.UserName == fromUser);
             if (user == null)
             {
                 result.Status = EDbQueryStatus.Failure;
@@ -68,14 +72,13 @@ namespace Chat.Application
             message.User = user;
             try
             {
-                await Db.Messages.AddAsync(message);
-                await Db.SaveChangesAsync();
+                await _messageRepository.InsertAsync(message);
                 result.Data = (MessageDto)message;
             }
             catch (Exception ex)
             {
                 string errorMessage = "Произошла ошибка при добавлении сообщения.";
-                Logger.LogError(ex, $"{errorMessage} {ex.Message}");
+                _logger.LogError(ex, $"{errorMessage} {ex.Message}");
                 result.Status = EDbQueryStatus.Failure;
                 result.ErrorMessage = errorMessage;
                 return result;
@@ -94,7 +97,7 @@ namespace Chat.Application
             try
             {
                 // Возьмем последние 1000 сообщений, поскольку в примере не реализован постраничный вывод.
-                List<MessageDto> messages = await Db.Messages
+                List<MessageDto> messages = await _messageRepository.GetAllQueryable()
                     .Include(x => x.User)
                     .Where(x => x.MessageType == EMessageType.Public)
                     .OrderByDescending(x => x.CreateDate)
@@ -105,7 +108,7 @@ namespace Chat.Application
                 result.Messages = messages;
 
                 // Получим всех пользователей, кроме инициатора.
-                GetUsersResult userResult = await UserService.GetUsersAsync(userName);
+                GetUsersResult userResult = await _userService.GetUsersAsync(userName);
                 if (userResult.Status == EDbQueryStatus.Failure)
                 {
                     result.Status = EDbQueryStatus.Failure;
@@ -119,7 +122,7 @@ namespace Chat.Application
                 string errorMessage = $"Произошла ошибка при получении информации о сообщениях.";
                 result.ErrorMessage = errorMessage;
                 result.Status = EDbQueryStatus.Failure;
-                Logger.LogError(ex, $"{errorMessage} {ex.Message}");
+                _logger.LogError(ex, $"{errorMessage} {ex.Message}");
             }
             return result;
         }
@@ -136,7 +139,7 @@ namespace Chat.Application
                 throw new ArgumentNullException(nameof(toUser));
             }
             var result = new PrivateMessageInfoResult { Status = EDbQueryStatus.Success };
-            ApplicationUser userSender = await Db.Users
+            ApplicationUser userSender = await _userRepository.GetAllQueryable()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.UserName == fromUser);
             if (userSender == null)
@@ -146,7 +149,7 @@ namespace Chat.Application
                 return result;
             }
             result.FromUser = userSender;
-            ApplicationUser userRecipient = await Db.Users
+            ApplicationUser userRecipient = await _userRepository.GetAllQueryable()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.UserName == toUser);
             if (userRecipient == null)
@@ -160,7 +163,7 @@ namespace Chat.Application
             try
             {
                 // Возьмем последние 1000 приватных сообщений м/у пользователями.
-                List<MessageDto> messages = await Db.Messages
+                List<MessageDto> messages = await _messageRepository.GetAllQueryable()
                     .Include(x => x.User)
                     .Where(x => x.MessageType == EMessageType.Private)
                     .Where(x => privateUserIds.Contains(x.User.Id))
@@ -173,7 +176,7 @@ namespace Chat.Application
                 result.Messages = messages;
 
                 // Получим всех пользователей, кроме инициатора.
-                GetUsersResult userResult = await UserService.GetUsersAsync(fromUser);
+                GetUsersResult userResult = await _userService.GetUsersAsync(fromUser);
                 if (userResult.Status == EDbQueryStatus.Failure)
                 {
                     result.Status = EDbQueryStatus.Failure;
@@ -187,7 +190,7 @@ namespace Chat.Application
                 string errorMessage = $"Произошла ошибка при получении информации о приватных сообщениях.";
                 result.ErrorMessage = errorMessage;
                 result.Status = EDbQueryStatus.Failure;
-                Logger.LogError(ex, $"{errorMessage} {ex.Message}");
+                _logger.LogError(ex, $"{errorMessage} {ex.Message}");
             }
             return result;
         }
@@ -203,8 +206,8 @@ namespace Chat.Application
             {
                 if (disposing)
                 {
-                    Db.Dispose();
-                    UserService.Dispose();
+                    //_messageRepository.Dispose();
+                    _userService.Dispose();
                 }
                 disposed = true;
             }

@@ -1,4 +1,5 @@
 ﻿using Chat.Application.Identity;
+using Chat.Application.Interfaces;
 using Chat.Application.Models;
 using Chat.Infrastructure.ModelsConfiguration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -17,8 +18,10 @@ namespace Chat.Infrastructure
         {
         }
 
-        public DbSet<Message> Messages { get; set; }
+        public DbContext Instance => this;
 
+        public DbSet<Message> Messages { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

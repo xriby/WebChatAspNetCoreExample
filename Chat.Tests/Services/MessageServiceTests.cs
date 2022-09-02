@@ -1,5 +1,4 @@
-﻿using Chat.Common;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,8 +11,10 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Chat.Application;
+using Chat.Application.Common;
 using Chat.Application.Identity;
 using Chat.Application.Interfaces;
+using Chat.Application.Interfaces.Repositories;
 using Chat.Application.Models;
 using Chat.Application.ModelsDto;
 using Chat.Application.Results;
@@ -100,6 +101,8 @@ namespace Chat.Tests.Services
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
             
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             var mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -113,7 +116,8 @@ namespace Chat.Tests.Services
 
             var messageService = new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
             
             var message = new MessageDto { Text = "Message" };
             string user = "user";
@@ -157,6 +161,8 @@ namespace Chat.Tests.Services
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
             
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             var mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -170,7 +176,8 @@ namespace Chat.Tests.Services
 
             var messageService = new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
             
             var message = new MessageDto { Text = "Message" };
             string user = "user1";
@@ -230,6 +237,8 @@ namespace Chat.Tests.Services
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
 
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             var mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -243,7 +252,8 @@ namespace Chat.Tests.Services
 
             var messageService = new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
             
             MessageInfoResult result = await messageService.GetMessageInfoAsync(user1.UserName);
 
@@ -323,6 +333,8 @@ namespace Chat.Tests.Services
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
 
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             var mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -336,7 +348,8 @@ namespace Chat.Tests.Services
 
             var messageService = new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
 
             PrivateMessageInfoResult result = await messageService.GetPrivateMessageInfoAsync(user1.UserName, user2.UserName);
 
@@ -351,10 +364,13 @@ namespace Chat.Tests.Services
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
 
             return new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
         }
     }
 }
