@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Chat.Application.Identity;
 using Chat.Application.Interfaces.Repositories;
@@ -34,6 +35,8 @@ namespace Chat.Tests.Services
             var users = new List<ApplicationUser> { user1, user2, user3 };
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
+            mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockUsers.Object);
 
             var userService = new UserService(mockLogger.Object, mockUserRepository.Object);
 
@@ -62,6 +65,8 @@ namespace Chat.Tests.Services
             var users = new List<ApplicationUser> { user1, user2, user3 };
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
+            mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockUsers.Object);
 
             var userService = new UserService(mockLogger.Object, mockUserRepository.Object);
 

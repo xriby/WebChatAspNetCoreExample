@@ -1,28 +1,24 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Chat.Application.Interfaces;
+using Chat.Application.ModelsDto;
+using Chat.Application.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Chat.Application.Interfaces;
-using Chat.Application.ModelsDto;
-using Chat.Application.Results;
 
 namespace Chat.Web.Controllers
 {
     public class ChatController : Controller
     {
-        private readonly ILogger<ChatController> Logger;
-        private readonly IMessageService MessageService;
-        private readonly IUserService UserService;
+        private readonly IMessageService _messageService;
+        private readonly IUserService _userService;
 
-        public ChatController(ILogger<ChatController> logger,
-            IMessageService messageService,
+        public ChatController(IMessageService messageService,
             IUserService userService)
         {
-            Logger = logger;
-            MessageService = messageService;
-            UserService = userService;
+            _messageService = messageService;
+            _userService = userService;
         }
 
         /// <summary>
@@ -36,7 +32,7 @@ namespace Chat.Web.Controllers
         [Authorize]
         public async Task<ActionResult> Index()
         {
-            MessageInfoResult result = await MessageService.GetMessageInfoAsync(UserName);
+            MessageInfoResult result = await _messageService.GetMessageInfoAsync(UserName);
             return View("Index", result);
         }
 
@@ -48,7 +44,7 @@ namespace Chat.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(MessageDto message)
         {
-            AddMessageResult result = await MessageService.AddMessageAsync(message, UserName);
+            AddMessageResult result = await _messageService.AddMessageAsync(message, UserName);
             return Content(JsonSerializer.Serialize(result), "application/json", Encoding.UTF8);
         }
 
@@ -59,7 +55,7 @@ namespace Chat.Web.Controllers
         [Authorize]
         public async Task<ActionResult> Private(string with)
         {
-            PrivateMessageInfoResult result = await MessageService.GetPrivateMessageInfoAsync(UserName, with);
+            PrivateMessageInfoResult result = await _messageService.GetPrivateMessageInfoAsync(UserName, with);
             if (result.Status == EDbQueryStatus.Failure)
             {
                 var error = new ErrorViewModel { ErrorMessage = result.ErrorMessage };
@@ -72,8 +68,8 @@ namespace Chat.Web.Controllers
         {
             if (disposing)
             {
-                MessageService.Dispose();
-                UserService.Dispose();
+                _messageService.Dispose();
+                _userService.Dispose();
             }
             base.Dispose(disposing);
         }
