@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Chat.Application.Interfaces;
-using Chat.Infrastructure.ModelsDto;
+using Chat.Application.ModelsDto;
 
 namespace Chat.Web.Controllers
 {

@@ -2,30 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Application.Identity;
 using Chat.Application.Interfaces;
-using Chat.Common;
-using Chat.Infrastructure;
-using Chat.Infrastructure.Common;
-using Chat.Infrastructure.Identity;
+using Chat.Application.Interfaces.Repositories;
+using Chat.Application.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Chat.Application
+namespace Chat.Application.Services
 {
     /// <summary>
     /// Сервис работы с пользователями.
     /// </summary>
     public class UserService : IUserService
     {
-        private readonly ILogger<UserService> Logger;
-        private readonly ChatDbContext Db;
+        private readonly ILogger<UserService> _logger;
+        private readonly IUserRepository _userRepository;
         private bool disposed = false;
 
         public UserService(ILogger<UserService> logger,
-            ChatDbContext db)
+            IUserRepository userRepository)
         {
-            Logger = logger;
-            Db = db;
+            _logger = logger;
+            _userRepository = userRepository;
         }
 
         /// <inheritdoc />
@@ -34,7 +33,7 @@ namespace Chat.Application
             var result = new GetUsersResult { Status = EDbQueryStatus.Success };
             try
             {
-                List<ApplicationUser> users = await Db.Users
+                List<ApplicationUser> users = await _userRepository.GetAllQueryable()
                     .OrderBy(x => x.UserName)
                     .AsNoTracking()
                     .ToListAsync();
@@ -51,7 +50,7 @@ namespace Chat.Application
             catch (Exception ex)
             {
                 string errorMessage = "Произошла ошибка при получении пользователей.";
-                Logger.LogError(ex, $"{errorMessage} {ex.Message}");
+                _logger.LogError(ex, $"{errorMessage} {ex.Message}");
                 result.Status = EDbQueryStatus.Failure;
                 result.ErrorMessage = errorMessage;
             }
@@ -69,7 +68,7 @@ namespace Chat.Application
             {
                 if (disposing)
                 {
-                    Db.Dispose();
+                    //Db.Dispose();
                 }
                 disposed = true;
             }

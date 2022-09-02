@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Chat.Infrastructure.Common;
-using Chat.Infrastructure.ModelsDto;
+using Chat.Application.ModelsDto;
+using Chat.Application.Results;
 
 namespace Chat.Application.Interfaces
 {

@@ -1,5 +1,4 @@
-﻿using Chat.Common;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MockQueryable.Moq;
 using Moq;
@@ -7,11 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using Chat.Application;
-using Chat.Infrastructure;
-using Chat.Infrastructure.Common;
-using Chat.Infrastructure.Identity;
+using Chat.Application.Identity;
+using Chat.Application.Interfaces.Repositories;
+using Chat.Application.Results;
+using Chat.Application.Services;
+using Chat.Infrastructure.Data;
 
 namespace Chat.Tests.Services
 {
@@ -24,6 +25,7 @@ namespace Chat.Tests.Services
             // Arrange
             var mockDb = new Mock<ChatDbContext>();
             var mockLogger = new Mock<ILogger<UserService>>();
+            Mock<IUserRepository> mockUserRepository = new();
             Guid guid1 = Guid.NewGuid();
             Guid guid2 = Guid.NewGuid();
             Guid guid3 = Guid.NewGuid();
@@ -33,8 +35,10 @@ namespace Chat.Tests.Services
             var users = new List<ApplicationUser> { user1, user2, user3 };
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
+            mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockUsers.Object);
 
-            var userService = new UserService(mockLogger.Object, mockDb.Object);
+            var userService = new UserService(mockLogger.Object, mockUserRepository.Object);
 
             // Act
             GetUsersResult result = await userService.GetUsersAsync();
@@ -51,6 +55,7 @@ namespace Chat.Tests.Services
             // Arrange
             var mockDb = new Mock<ChatDbContext>();
             var mockLogger = new Mock<ILogger<UserService>>();
+            Mock<IUserRepository> mockUserRepository = new();
             Guid guid1 = Guid.NewGuid();
             Guid guid2 = Guid.NewGuid();
             Guid guid3 = Guid.NewGuid();
@@ -60,8 +65,10 @@ namespace Chat.Tests.Services
             var users = new List<ApplicationUser> { user1, user2, user3 };
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
+            mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockUsers.Object);
 
-            var userService = new UserService(mockLogger.Object, mockDb.Object);
+            var userService = new UserService(mockLogger.Object, mockUserRepository.Object);
 
             // Act
             GetUsersResult result = await userService.GetUsersAsync(user1.UserName);

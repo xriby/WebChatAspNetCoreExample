@@ -1,7 +1,7 @@
 ﻿using System;
 using Chat.Application.Interfaces;
 
-namespace Chat.Application
+namespace Chat.Application.Services
 {
     public class DateTimeService : IDateTimeService
     {

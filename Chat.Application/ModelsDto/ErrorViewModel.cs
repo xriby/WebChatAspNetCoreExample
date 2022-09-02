@@ -1,4 +1,4 @@
-namespace Chat.Infrastructure.ModelsDto
+namespace Chat.Application.ModelsDto
 {
     public class ErrorViewModel
     {

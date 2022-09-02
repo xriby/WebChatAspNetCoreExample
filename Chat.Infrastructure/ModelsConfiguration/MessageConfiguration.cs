@@ -1,5 +1,5 @@
-﻿using Chat.Infrastructure.Identity;
-using Chat.Infrastructure.Models;
+﻿using Chat.Application.Identity;
+using Chat.Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

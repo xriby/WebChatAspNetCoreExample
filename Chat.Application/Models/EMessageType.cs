@@ -1,4 +1,4 @@
-﻿namespace Chat.Infrastructure.Models
+﻿namespace Chat.Application.Models
 {
     /// <summary>
     /// Тип сообщения.

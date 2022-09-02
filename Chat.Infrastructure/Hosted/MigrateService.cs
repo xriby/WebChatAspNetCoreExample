@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Chat.Infrastructure;
+using Chat.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Chat.Application.Hosted
+namespace Chat.Infrastructure.Hosted
 {
     public class MigrateService : BackgroundService
     {

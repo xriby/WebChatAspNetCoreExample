@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Chat.Infrastructure.Common;
+using Chat.Application.Results;
 
 namespace Chat.Application.Interfaces
 {

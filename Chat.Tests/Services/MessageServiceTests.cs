@@ -1,6 +1,12 @@
-﻿using Chat.Common;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Chat.Application.Common;
+using Chat.Application.Identity;
+using Chat.Application.Interfaces;
+using Chat.Application.Interfaces.Repositories;
+using Chat.Application.Models;
+using Chat.Application.ModelsDto;
+using Chat.Application.Results;
+using Chat.Application.Services;
+using Chat.Infrastructure.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MockQueryable.Moq;
@@ -8,16 +14,8 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Chat.Application;
-using Chat.Application.Interfaces;
-using Chat.Infrastructure;
-using Chat.Infrastructure.Common;
-using Chat.Infrastructure.Identity;
-using Chat.Infrastructure.Models;
-using Chat.Infrastructure.ModelsDto;
 
 namespace Chat.Tests.Services
 {
@@ -40,7 +38,7 @@ namespace Chat.Tests.Services
             Assert.AreEqual(EDbQueryStatus.Failure, result.Status);
             Assert.AreEqual("Ошибка. Введите сообщение.", result.ErrorMessage);
         }
-        
+
         [TestMethod]
         public async Task MaxTextAddMessageAsync()
         {
@@ -55,7 +53,7 @@ namespace Chat.Tests.Services
             Assert.AreEqual(EDbQueryStatus.Failure, result.Status);
             Assert.IsTrue(result.ErrorMessage.Contains("Ошибка"));
         }
-        
+
         [TestMethod]
         public async Task EmptyUserAddMessageAsync()
         {
@@ -68,9 +66,9 @@ namespace Chat.Tests.Services
             Assert.AreEqual(EDbQueryStatus.Failure, result.Status);
             Assert.AreEqual("Ошибка. Не задан пользователь.", result.ErrorMessage);
         }
-        
+
         [TestMethod]
-        public async Task NotFoundUserAddMessageAsync()
+        public async Task AddMessage_Must_Return_NotFoundUser()
         {
             Guid giud1 = Guid.NewGuid();
             Guid giud2 = Guid.NewGuid();
@@ -80,30 +78,32 @@ namespace Chat.Tests.Services
             var messages = new List<Message>
             {
                 new Message
-                { 
-                    MessageId = 1, 
-                    Text = "Message1", 
-                    MessageType = EMessageType.Public, 
+                {
+                    MessageId = 1,
+                    Text = "Message1",
+                    MessageType = EMessageType.Public,
                     CreateDate = DateTime.UtcNow,
                     User = user1
                 },
                 new Message
-                { 
-                    MessageId = 2, 
-                    Text = "Message2", 
-                    MessageType = EMessageType.Public, 
+                {
+                    MessageId = 2,
+                    Text = "Message2",
+                    MessageType = EMessageType.Public,
                     CreateDate = DateTime.UtcNow,
                     User = user2
                 }
             };
-            
+
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
-            
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
+
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             var mockMessages = messages.AsQueryable().BuildMockDbSet();
-            
+
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
             mockDb.Object.Messages = mockMessages.Object;
 
@@ -111,13 +111,17 @@ namespace Chat.Tests.Services
                 .Callback((Message model, CancellationToken token) => { messages.Add(model); })
                 .ReturnsAsync((Message model, CancellationToken token) => null);
 
+            mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockUsers.Object);
+
             var messageService = new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
-            
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
+
             var message = new MessageDto { Text = "Message" };
             string user = "user";
-           
+
             AddMessageResult result = await messageService.AddMessageAsync(message, user);
 
             Assert.AreEqual(EDbQueryStatus.Failure, result.Status);
@@ -125,9 +129,9 @@ namespace Chat.Tests.Services
             mockMessages.Verify(x => x.AddAsync(It.IsAny<Message>(), It.IsAny<CancellationToken>()), Times.Never);
             mockDb.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
         }
-        
+
         [TestMethod]
-        public async Task AddMessageAsync()
+        public async Task AddMessageAsync_Must_Return_Success()
         {
             Guid giud1 = Guid.NewGuid();
             Guid giud2 = Guid.NewGuid();
@@ -137,30 +141,32 @@ namespace Chat.Tests.Services
             var messages = new List<Message>
             {
                 new Message
-                { 
-                    MessageId = 1, 
-                    Text = "Message1", 
-                    MessageType = EMessageType.Public, 
+                {
+                    MessageId = 1,
+                    Text = "Message1",
+                    MessageType = EMessageType.Public,
                     CreateDate = DateTime.UtcNow,
                     User = user1
                 },
                 new Message
-                { 
-                    MessageId = 2, 
-                    Text = "Message2", 
-                    MessageType = EMessageType.Public, 
+                {
+                    MessageId = 2,
+                    Text = "Message2",
+                    MessageType = EMessageType.Public,
                     CreateDate = DateTime.UtcNow,
                     User = user2
                 }
             };
-            
+
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
-            
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
+
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             var mockMessages = messages.AsQueryable().BuildMockDbSet();
-            
+
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
             mockDb.Object.Messages = mockMessages.Object;
 
@@ -168,18 +174,20 @@ namespace Chat.Tests.Services
                 .Callback((Message model, CancellationToken token) => { messages.Add(model); })
                 .ReturnsAsync((Message model, CancellationToken token) => null);
 
+            mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockUsers.Object);
+
             var messageService = new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
-            
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
+
             var message = new MessageDto { Text = "Message" };
             string user = "user1";
-           
+
             AddMessageResult result = await messageService.AddMessageAsync(message, user);
 
             Assert.AreEqual(EDbQueryStatus.Success, result.Status);
-            mockMessages.Verify(x => x.AddAsync(It.IsAny<Message>(), It.IsAny<CancellationToken>()), Times.Once);
-            mockDb.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [TestMethod]
@@ -196,7 +204,7 @@ namespace Chat.Tests.Services
                 Assert.IsTrue(ex is ArgumentNullException);
             }
         }
-        
+
         [TestMethod]
         public async Task GetMessageInfoAsync()
         {
@@ -230,6 +238,8 @@ namespace Chat.Tests.Services
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
 
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             var mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -241,10 +251,16 @@ namespace Chat.Tests.Services
 
             mockUserService.Setup(x => x.GetUsersAsync(user1.UserName)).ReturnsAsync(usersResult);
 
+            mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockUsers.Object);
+            mockMessageRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockMessages.Object);
+
             var messageService = new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
-            
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
+
             MessageInfoResult result = await messageService.GetMessageInfoAsync(user1.UserName);
 
             Assert.AreEqual(EDbQueryStatus.Success, result.Status);
@@ -259,7 +275,7 @@ namespace Chat.Tests.Services
             MessageService messageService = MockMessageService();
             string fromUser = "user1";
             string toUser = "user2";
-            
+
             try
             {
                 PrivateMessageInfoResult result = await messageService.GetPrivateMessageInfoAsync(null, toUser);
@@ -268,7 +284,7 @@ namespace Chat.Tests.Services
             {
                 Assert.IsTrue(ex is ArgumentNullException);
             }
-            
+
             try
             {
                 PrivateMessageInfoResult result = await messageService.GetPrivateMessageInfoAsync(fromUser, null);
@@ -323,6 +339,8 @@ namespace Chat.Tests.Services
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
 
             var mockUsers = users.AsQueryable().BuildMockDbSet();
             var mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -334,9 +352,15 @@ namespace Chat.Tests.Services
 
             mockUserService.Setup(x => x.GetUsersAsync(user1.UserName)).ReturnsAsync(usersResult);
 
+            mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockUsers.Object);
+            mockMessageRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
+                .Returns(mockMessages.Object);
+
             var messageService = new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
 
             PrivateMessageInfoResult result = await messageService.GetPrivateMessageInfoAsync(user1.UserName, user2.UserName);
 
@@ -351,10 +375,13 @@ namespace Chat.Tests.Services
             var mockDb = new Mock<ChatDbContext>();
             var mockUserService = new Mock<IUserService>();
             var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<IMessageRepository> mockMessageRepository = new();
+            Mock<IUserRepository> mockUserRepository = new();
 
             return new MessageService(mockLogger.Object,
                 mockUserService.Object,
-                mockDb.Object);
+                mockMessageRepository.Object,
+                mockUserRepository.Object);
         }
     }
 }

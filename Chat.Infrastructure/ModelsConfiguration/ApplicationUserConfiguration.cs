@@ -1,4 +1,4 @@
-﻿using Chat.Infrastructure.Identity;
+﻿using Chat.Application.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

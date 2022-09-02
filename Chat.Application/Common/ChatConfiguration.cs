@@ -1,4 +1,4 @@
-﻿namespace Chat.Common
+﻿namespace Chat.Application.Common
 {
     /// <summary>
     /// Настройки чата.
