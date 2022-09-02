@@ -9,7 +9,7 @@ using Chat.Application.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Chat.Application
+namespace Chat.Application.Services
 {
     /// <summary>
     /// Сервис работы с пользователями.

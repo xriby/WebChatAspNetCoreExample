@@ -1,5 +1,5 @@
-using Chat.Application;
 using Chat.Application.Interfaces;
+using Chat.Application.Services;
 using Chat.Infrastructure;
 using Chat.Infrastructure.Hosted;
 using Microsoft.AspNetCore.Builder;

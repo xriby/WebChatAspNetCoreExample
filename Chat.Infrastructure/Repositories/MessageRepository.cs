@@ -1,5 +1,6 @@
 ﻿using Chat.Application.Interfaces.Repositories;
 using Chat.Application.Models;
+using Chat.Infrastructure.Data;
 
 namespace Chat.Infrastructure.Repositories
 {

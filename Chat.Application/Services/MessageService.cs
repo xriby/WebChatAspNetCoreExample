@@ -12,7 +12,7 @@ using Chat.Application.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Chat.Application
+namespace Chat.Application.Services
 {
     /// <summary>
     /// Сервис сообщений.
@@ -27,7 +27,7 @@ namespace Chat.Application
 
         public MessageService(ILogger<MessageService> logger,
             IUserService userService,
-            IMessageRepository messageRepository, 
+            IMessageRepository messageRepository,
             IUserRepository userRepository)
         {
             _logger = logger;
@@ -213,6 +213,6 @@ namespace Chat.Application
             }
         }
 
-        
+
     }
 }

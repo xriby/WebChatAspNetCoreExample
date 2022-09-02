@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Chat.Application;
 using Chat.Application.Identity;
 using Chat.Application.Interfaces.Repositories;
 using Chat.Application.Results;
-using Chat.Infrastructure;
+using Chat.Application.Services;
+using Chat.Infrastructure.Data;
 
 namespace Chat.Tests.Services
 {

@@ -1,4 +1,5 @@
 ﻿using Chat.Application.Interfaces.Repositories;
+using Chat.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace Chat.Infrastructure.Repositories
             return await DbContext.Set<TEntity>().FindAsync(id);
         }
 
-        public async Task<List<TEntity>> GetAll(CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<TEntity>> GetAll(CancellationToken cancellationToken)
         {
             return await DbContext.Set<TEntity>().ToListAsync(cancellationToken);
         }
