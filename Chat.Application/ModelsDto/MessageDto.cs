@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Chat.Infrastructure.Models;
+using Chat.Application.Models;
 
-namespace Chat.Infrastructure.ModelsDto
+namespace Chat.Application.ModelsDto
 {
     /// <summary>
     /// Модель сообщения передачи данных.

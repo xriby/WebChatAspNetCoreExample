@@ -1,4 +1,4 @@
-﻿namespace Chat.Common
+﻿namespace Chat.Application.Results
 {
     /// <summary>
     /// Статус запроса к БД.

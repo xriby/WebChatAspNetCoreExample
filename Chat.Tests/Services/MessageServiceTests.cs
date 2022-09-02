@@ -12,12 +12,12 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Chat.Application;
+using Chat.Application.Identity;
 using Chat.Application.Interfaces;
+using Chat.Application.Models;
+using Chat.Application.ModelsDto;
+using Chat.Application.Results;
 using Chat.Infrastructure;
-using Chat.Infrastructure.Common;
-using Chat.Infrastructure.Identity;
-using Chat.Infrastructure.Models;
-using Chat.Infrastructure.ModelsDto;
 
 namespace Chat.Tests.Services
 {

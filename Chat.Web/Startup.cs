@@ -1,7 +1,7 @@
 using Chat.Application;
-using Chat.Application.Hosted;
 using Chat.Application.Interfaces;
 using Chat.Infrastructure;
+using Chat.Infrastructure.Hosted;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -32,8 +32,6 @@ namespace Chat.Web
             services.AddTransient<IDateTimeService, DateTimeService>();
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<IUserService, UserService>();
-
-            services.AddHostedService<MigrateService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,8 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using System.Text.Json;
-using Chat.Infrastructure.Models;
-using Chat.Infrastructure.ModelsDto;
+using Chat.Application.Models;
+using Chat.Application.ModelsDto;
 
 namespace Chat.Tests.Models
 {

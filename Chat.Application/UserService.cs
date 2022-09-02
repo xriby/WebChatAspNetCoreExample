@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chat.Application.Identity;
 using Chat.Application.Interfaces;
-using Chat.Common;
+using Chat.Application.Results;
 using Chat.Infrastructure;
-using Chat.Infrastructure.Common;
-using Chat.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

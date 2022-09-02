@@ -6,8 +6,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Chat.Application.Interfaces;
-using Chat.Infrastructure.Common;
-using Chat.Infrastructure.ModelsDto;
+using Chat.Application.ModelsDto;
+using Chat.Application.Results;
 
 namespace Chat.Web.Controllers
 {

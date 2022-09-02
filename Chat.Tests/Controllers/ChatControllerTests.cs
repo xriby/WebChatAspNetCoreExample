@@ -10,11 +10,11 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Chat.Application.Identity;
 using Chat.Application.Interfaces;
-using Chat.Infrastructure.Common;
-using Chat.Infrastructure.Identity;
-using Chat.Infrastructure.Models;
-using Chat.Infrastructure.ModelsDto;
+using Chat.Application.Models;
+using Chat.Application.ModelsDto;
+using Chat.Application.Results;
 
 namespace Chat.Tests.Controllers
 {

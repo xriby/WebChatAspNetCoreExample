@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Chat.Common
+namespace Chat.Application.Results
 {
     /// <summary>
     /// Результат операции запроса к БД.

@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Chat.Application;
+using Chat.Application.Identity;
+using Chat.Application.Results;
 using Chat.Infrastructure;
-using Chat.Infrastructure.Common;
-using Chat.Infrastructure.Identity;
 
 namespace Chat.Tests.Services
 {

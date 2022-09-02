@@ -1,4 +1,5 @@
-﻿using Chat.Infrastructure.Identity;
+﻿using Chat.Application.Identity;
+using Chat.Infrastructure.Hosted;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,8 @@ namespace Chat.Infrastructure
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ChatDbContext>();
+
+            services.AddHostedService<MigrateService>();
 
             return services;
         }
