@@ -1,11 +1,11 @@
 ﻿@using Chat.Application.Models
-@using Chat.Application.ModelsDto
-@model Chat.Application.Results.MessageInfoResult
+@using Chat.Web.ViewModels
+@model Chat.Web.ViewModels.MessageInfoVm
 
 @{
     ViewData["Title"] = "Общий чат";
 
-    MessageDto message = new() { MessageType = EMessageType.Public };
+    MessageVm message = new() { MessageType = EMessageType.Public };
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -15,7 +15,7 @@
         <div class="card">
             <div class="card-header"><h4>Сообщения видят все пользователи</h4></div>
             <div class="card-body fixed-panel">
-                @foreach (MessageDto item in Model.Messages)
+                @foreach (MessageVm item in Model.Messages)
                 {
                     <div class="media">
                         <div class="media-body">

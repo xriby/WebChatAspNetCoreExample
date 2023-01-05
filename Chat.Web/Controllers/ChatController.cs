@@ -31,10 +31,10 @@ namespace Chat.Web.Controllers
         /// Общий чат.
         /// </summary>
         [Authorize]
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             MessageInfoResult result = await _messageService.GetMessageInfoAsync(UserName);
-            return View("Index", result);
+            return View("Index", (MessageInfoVm)result);
         }
 
         /// <summary>
@@ -43,9 +43,9 @@ namespace Chat.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(MessageDto message)
+        public async Task<IActionResult> Add(MessageVm message)
         {
-            AddMessageResult result = await _messageService.AddMessageAsync(message, UserName);
+            AddMessageResult result = await _messageService.AddMessageAsync((MessageDto)message, UserName);
             return Content(JsonSerializer.Serialize(result), "application/json", Encoding.UTF8);
         }
 
@@ -54,7 +54,7 @@ namespace Chat.Web.Controllers
         /// </summary>
         /// <param name="with">Имя пользователя</param>
         [Authorize]
-        public async Task<ActionResult> Private(string with)
+        public async Task<IActionResult> Private(string with)
         {
             PrivateMessageInfoResult result = await _messageService.GetPrivateMessageInfoAsync(UserName, with);
             if (result.Status == EDbQueryStatus.Failure)
@@ -62,7 +62,7 @@ namespace Chat.Web.Controllers
                 ErrorViewModel error = new() { ErrorMessage = result.ErrorMessage };
                 return View("Error", error);
             }
-            return View("Private", result);
+            return View("Private", (PrivateMessageInfoVm)result);
         }
 
         protected override void Dispose(bool disposing)

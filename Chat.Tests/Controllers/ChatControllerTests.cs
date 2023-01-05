@@ -58,10 +58,10 @@ namespace Chat.Tests.Controllers
                 Status = EDbQueryStatus.Success,
                 Data = message
             };
-            mockMessageService.Setup(x => x.AddMessageAsync(message, It.IsAny<string>())).ReturnsAsync(addMessageResult);
+            mockMessageService.Setup(x => x.AddMessageAsync(It.IsAny<MessageDto>(), It.IsAny<string>())).ReturnsAsync(addMessageResult);
             ChatController controller = new(mockMessageService.Object, mockUserService.Object);
 
-            ContentResult result = await controller.Add(message) as ContentResult;
+            ContentResult result = await controller.Add((MessageVm)message) as ContentResult;
 
             Assert.IsNotNull(result);
             JsonDocument document = JsonDocument.Parse(result.Content);
@@ -107,8 +107,10 @@ namespace Chat.Tests.Controllers
             PrivateMessageInfoResult privateMessageInfoResult = new()
             {
                 Status = EDbQueryStatus.Success,
-                Messages = new(),
-                Users = new()
+                Messages = new List<MessageDto>(),
+                Users = new List<ApplicationUser>(),
+                FromUser = new ApplicationUser(),
+                ToUser = new ApplicationUser(),
             };
             mockMessageService.Setup(x => x.GetPrivateMessageInfoAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(privateMessageInfoResult);
@@ -117,7 +119,7 @@ namespace Chat.Tests.Controllers
             ViewResult result = await controller.Private(user) as ViewResult;
             Assert.IsNotNull(result);
             Assert.AreEqual("private", result.ViewName.ToLower());
-            Assert.IsTrue(result.Model is PrivateMessageInfoResult);
+            Assert.IsTrue(result.Model is PrivateMessageInfoVm);
             mockMessageService.Verify(x => x.GetPrivateMessageInfoAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
     }

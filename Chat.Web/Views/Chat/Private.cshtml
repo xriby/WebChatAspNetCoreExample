@@ -1,11 +1,11 @@
 ﻿@using Chat.Application.Models
-@using Chat.Application.ModelsDto
-@model Chat.Application.Results.PrivateMessageInfoResult
+@using Chat.Web.ViewModels
+@model Chat.Web.ViewModels.PrivateMessageInfoVm
 
 @{
     ViewData["Title"] = "Приватный чат";
 
-    MessageDto message = new() { MessageType = EMessageType.Private };
+    MessageVm message = new() { MessageType = EMessageType.Private };
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -17,7 +17,7 @@
         <div class="card">
             <div class="card-header"><h4>С пользователем @Model.ToUser.UserName</h4></div>
             <div class="card-body fixed-panel">
-                @foreach (MessageDto item in Model.Messages)
+                @foreach (MessageVm item in Model.Messages)
                 {
                     <div class="media">
                         <div class="media-body">

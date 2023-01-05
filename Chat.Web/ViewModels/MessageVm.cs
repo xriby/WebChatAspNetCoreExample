@@ -1,22 +1,29 @@
-﻿using Chat.Application.Models;
-using System;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Chat.Application.Models;
+using Chat.Application.ModelsDto;
 
-namespace Chat.Application.ModelsDto
+namespace Chat.Web.ViewModels
 {
     /// <summary>
     /// Модель сообщения передачи данных.
     /// </summary>
-    public class MessageDto
+    public class MessageVm
     {
         /// <summary>
         /// Идентификатор.
         /// </summary>
+        [Display(Name = "Идентификатор")]
         public int MessageId { get; set; }
 
         /// <summary>
         /// Текст сообщения.
         /// </summary>
+        [Required(ErrorMessage = "Введите текст")]
+        [MaxLength(512, ErrorMessage = "Максимальная длина 512 символов")]
+        [MinLength(2, ErrorMessage = "Минимальная длина 2 символа")]
+        [Display(Name = "Текст сообщения")]
         public string Text { get; set; }
 
         /// <summary>
@@ -44,7 +51,7 @@ namespace Chat.Application.ModelsDto
         /// Имя отправителя сообщения.
         /// </summary>
         public string UserName { get; set; }
-
+        
         /// <summary>
         /// Идентификатор отправителя сообщения.
         /// </summary>
@@ -53,7 +60,25 @@ namespace Chat.Application.ModelsDto
         /// <summary>
         /// Перегружаем операцию преобразования
         /// </summary>
-        public static explicit operator MessageDto(Message message)
+        public static explicit operator MessageVm(MessageDto message)
+        {
+            return new MessageVm
+            {
+                MessageId = message.MessageId,
+                Text = message.Text,
+                CreateDate = message.CreateDate,
+                MessageType = message.MessageType,
+                RecipientId = message.RecipientId,
+                Viewed = message.Viewed,
+                UserId = message.UserId,
+                UserName = message.UserName
+            };
+        }
+        
+        /// <summary>
+        /// Перегружаем операцию преобразования
+        /// </summary>
+        public static explicit operator MessageDto(MessageVm message)
         {
             return new MessageDto
             {
@@ -63,24 +88,8 @@ namespace Chat.Application.ModelsDto
                 MessageType = message.MessageType,
                 RecipientId = message.RecipientId,
                 Viewed = message.Viewed,
-                UserId = message.User?.Id,
-                UserName = message.User?.UserName
-            };
-        }
-
-        /// <summary>
-        /// Перегружаем операцию преобразования
-        /// </summary>
-        public static explicit operator Message(MessageDto messageDto)
-        {
-            return new Message
-            {
-                MessageId = messageDto.MessageId,
-                Text = messageDto.Text,
-                CreateDate = messageDto.CreateDate,
-                MessageType = messageDto.MessageType,
-                RecipientId = messageDto.RecipientId,
-                Viewed = messageDto.Viewed,
+                UserId = message.UserId,
+                UserName = message.UserName
             };
         }
     }

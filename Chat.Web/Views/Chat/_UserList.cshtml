@@ -1,8 +1,9 @@
-﻿@using Chat.Application.Identity
-@model IEnumerable<Chat.Application.Identity.ApplicationUser>
+﻿@using Chat.Web.ViewModels
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<Chat.Web.ViewModels.UserVm>
 
 <div>
-    @foreach (ApplicationUser item in Model)
+    @foreach (UserVm item in Model)
         {
             <p><a asp-controller="Chat" asp-action="Private" asp-route-with="@item.UserName" title="Отправить личное сообщение">@item.UserName</a></p>
         }

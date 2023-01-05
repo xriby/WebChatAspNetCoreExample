@@ -1,6 +1,5 @@
-﻿using System;
-using Chat.Application.Identity;
-using Chat.Application.ModelsDto;
+﻿using Chat.Application.Identity;
+using System;
 
 namespace Chat.Application.Models
 {
@@ -43,21 +42,5 @@ namespace Chat.Application.Models
         /// Пользователь отправитель.
         /// </summary>
         public virtual ApplicationUser User { get; set; }
-
-        /// <summary>
-        /// Перегружаем операцию преобразования
-        /// </summary>
-        public static explicit operator Message(MessageDto messageDto)
-        {
-            return new Message
-            {
-                MessageId = messageDto.MessageId,
-                Text = messageDto.Text,
-                CreateDate = messageDto.CreateDate,
-                MessageType = messageDto.MessageType,
-                RecipientId = messageDto.RecipientId,
-                Viewed = messageDto.Viewed,
-            };
-        }
     }
 }
