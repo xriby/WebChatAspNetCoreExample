@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Chat.Web.ViewModels;
 
 namespace Chat.Tests.Controllers
 {
@@ -21,17 +22,17 @@ namespace Chat.Tests.Controllers
         [TestMethod]
         public async Task Index()
         {
-            var mockUserService = new Mock<IUserService>();
-            var mockMessageService = new Mock<IMessageService>();
-            var mockLogger = new Mock<ILogger<ChatController>>();
-            var messageInfoResult = new MessageInfoResult
+            Mock<IUserService> mockUserService = new();
+            Mock<IMessageService> mockMessageService = new();
+            Mock<ILogger<ChatController>> mockLogger = new();
+            MessageInfoResult messageInfoResult = new()
             {
                 Status = EDbQueryStatus.Success,
-                Messages = new List<MessageDto>(),
-                Users = new List<ApplicationUser>()
+                Messages = new(),
+                Users = new()
             };
             mockMessageService.Setup(x => x.GetMessageInfoAsync(It.IsAny<string>())).ReturnsAsync(messageInfoResult);
-            var controller = new ChatController(mockMessageService.Object, mockUserService.Object);
+            ChatController controller = new(mockMessageService.Object, mockUserService.Object);
 
             ViewResult result = await controller.Index() as ViewResult;
             Assert.IsNotNull(result);
@@ -42,23 +43,23 @@ namespace Chat.Tests.Controllers
         [TestMethod]
         public async Task Add()
         {
-            var mockUserService = new Mock<IUserService>();
-            var mockMessageService = new Mock<IMessageService>();
-            var mockLogger = new Mock<ILogger<ChatController>>();
-            var message = new MessageDto
+            Mock<IUserService> mockUserService = new();
+            Mock<IMessageService> mockMessageService = new();
+            Mock<ILogger<ChatController>> mockLogger = new();
+            MessageDto message = new()
             {
                 MessageId = 1,
                 Text = "Message1",
                 CreateDate = DateTime.UtcNow,
                 MessageType = EMessageType.Public
             };
-            var addMessageResult = new AddMessageResult
+            AddMessageResult addMessageResult = new()
             {
                 Status = EDbQueryStatus.Success,
                 Data = message
             };
             mockMessageService.Setup(x => x.AddMessageAsync(message, It.IsAny<string>())).ReturnsAsync(addMessageResult);
-            var controller = new ChatController(mockMessageService.Object, mockUserService.Object);
+            ChatController controller = new(mockMessageService.Object, mockUserService.Object);
 
             ContentResult result = await controller.Add(message) as ContentResult;
 
@@ -74,19 +75,19 @@ namespace Chat.Tests.Controllers
         [TestMethod]
         public async Task PrivateFailure()
         {
-            var mockUserService = new Mock<IUserService>();
-            var mockMessageService = new Mock<IMessageService>();
-            var mockLogger = new Mock<ILogger<ChatController>>();
+            Mock<IUserService> mockUserService = new();
+            Mock<IMessageService> mockMessageService = new();
+            Mock<ILogger<ChatController>> mockLogger = new();
             string user = "user1";
-            var privateMessageInfoResult = new PrivateMessageInfoResult
+            PrivateMessageInfoResult privateMessageInfoResult = new()
             {
                 Status = EDbQueryStatus.Failure,
-                Messages = new List<MessageDto>(),
-                Users = new List<ApplicationUser>()
+                Messages = new(),
+                Users = new()
             };
             mockMessageService.Setup(x => x.GetPrivateMessageInfoAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(privateMessageInfoResult);
-            var controller = new ChatController(mockMessageService.Object, mockUserService.Object);
+            ChatController controller = new(mockMessageService.Object, mockUserService.Object);
 
             ViewResult result = await controller.Private(user) as ViewResult;
 
@@ -99,19 +100,19 @@ namespace Chat.Tests.Controllers
         [TestMethod]
         public async Task PrivateSuccess()
         {
-            var mockUserService = new Mock<IUserService>();
-            var mockMessageService = new Mock<IMessageService>();
-            var mockLogger = new Mock<ILogger<ChatController>>();
+            Mock<IUserService> mockUserService = new();
+            Mock<IMessageService> mockMessageService = new();
+            Mock<ILogger<ChatController>> mockLogger = new();
             string user = "user1";
-            var privateMessageInfoResult = new PrivateMessageInfoResult
+            PrivateMessageInfoResult privateMessageInfoResult = new()
             {
                 Status = EDbQueryStatus.Success,
-                Messages = new List<MessageDto>(),
-                Users = new List<ApplicationUser>()
+                Messages = new(),
+                Users = new()
             };
             mockMessageService.Setup(x => x.GetPrivateMessageInfoAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(privateMessageInfoResult);
-            var controller = new ChatController(mockMessageService.Object, mockUserService.Object);
+            ChatController controller = new(mockMessageService.Object, mockUserService.Object);
 
             ViewResult result = await controller.Private(user) as ViewResult;
             Assert.IsNotNull(result);

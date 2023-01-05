@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Tests.Services
 {
@@ -28,7 +29,7 @@ namespace Chat.Tests.Services
             // Arrange
             MessageService messageService = MockMessageService();
 
-            var message = new MessageDto();
+            MessageDto message = new();
             string user = "user";
 
             // Act
@@ -45,7 +46,7 @@ namespace Chat.Tests.Services
             MessageService messageService = MockMessageService();
             int moreThanMaxText = ChatConfiguration.MaxTextLength + 1;
 
-            var message = new MessageDto { Text = new string('a', moreThanMaxText) };
+            MessageDto message = new() { Text = new('a', moreThanMaxText) };
             string user = "user";
 
             AddMessageResult result = await messageService.AddMessageAsync(message, user);
@@ -59,7 +60,7 @@ namespace Chat.Tests.Services
         {
             MessageService messageService = MockMessageService();
 
-            var message = new MessageDto { Text = "Message" };
+            MessageDto message = new() { Text = "Message" };
 
             AddMessageResult result = await messageService.AddMessageAsync(message, null);
 
@@ -72,12 +73,12 @@ namespace Chat.Tests.Services
         {
             Guid giud1 = Guid.NewGuid();
             Guid giud2 = Guid.NewGuid();
-            var user1 = new ApplicationUser { Id = giud1.ToString(), UserName = "user1" };
-            var user2 = new ApplicationUser { Id = giud2.ToString(), UserName = "user2" };
-            var users = new List<ApplicationUser> { user1, user2 };
-            var messages = new List<Message>
+            ApplicationUser user1 = new() { Id = giud1.ToString(), UserName = "user1" };
+            ApplicationUser user2 = new() { Id = giud2.ToString(), UserName = "user2" };
+            List<ApplicationUser> users = new() { user1, user2 };
+            List<Message> messages = new()
             {
-                new Message
+                new()
                 {
                     MessageId = 1,
                     Text = "Message1",
@@ -85,7 +86,7 @@ namespace Chat.Tests.Services
                     CreateDate = DateTime.UtcNow,
                     User = user1
                 },
-                new Message
+                new()
                 {
                     MessageId = 2,
                     Text = "Message2",
@@ -95,14 +96,14 @@ namespace Chat.Tests.Services
                 }
             };
 
-            var mockDb = new Mock<ChatDbContext>();
-            var mockUserService = new Mock<IUserService>();
-            var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<ChatDbContext> mockDb = new();
+            Mock<IUserService> mockUserService = new();
+            Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
 
-            var mockUsers = users.AsQueryable().BuildMockDbSet();
-            var mockMessages = messages.AsQueryable().BuildMockDbSet();
+            Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
+            Mock<DbSet<Message>> mockMessages = messages.AsQueryable().BuildMockDbSet();
 
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
             mockDb.Object.Messages = mockMessages.Object;
@@ -114,12 +115,12 @@ namespace Chat.Tests.Services
             mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
                 .Returns(mockUsers.Object);
 
-            var messageService = new MessageService(mockLogger.Object,
+            MessageService messageService = new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
                 mockUserRepository.Object);
 
-            var message = new MessageDto { Text = "Message" };
+            MessageDto message = new() { Text = "Message" };
             string user = "user";
 
             AddMessageResult result = await messageService.AddMessageAsync(message, user);
@@ -135,12 +136,12 @@ namespace Chat.Tests.Services
         {
             Guid giud1 = Guid.NewGuid();
             Guid giud2 = Guid.NewGuid();
-            var user1 = new ApplicationUser { Id = giud1.ToString(), UserName = "user1" };
-            var user2 = new ApplicationUser { Id = giud2.ToString(), UserName = "user2" };
-            var users = new List<ApplicationUser> { user1, user2 };
-            var messages = new List<Message>
+            ApplicationUser user1 = new() { Id = giud1.ToString(), UserName = "user1" };
+            ApplicationUser user2 = new() { Id = giud2.ToString(), UserName = "user2" };
+            List<ApplicationUser> users = new() { user1, user2 };
+            List<Message> messages = new()
             {
-                new Message
+                new()
                 {
                     MessageId = 1,
                     Text = "Message1",
@@ -148,7 +149,7 @@ namespace Chat.Tests.Services
                     CreateDate = DateTime.UtcNow,
                     User = user1
                 },
-                new Message
+                new()
                 {
                     MessageId = 2,
                     Text = "Message2",
@@ -158,14 +159,14 @@ namespace Chat.Tests.Services
                 }
             };
 
-            var mockDb = new Mock<ChatDbContext>();
-            var mockUserService = new Mock<IUserService>();
-            var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<ChatDbContext> mockDb = new();
+            Mock<IUserService> mockUserService = new();
+            Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
 
-            var mockUsers = users.AsQueryable().BuildMockDbSet();
-            var mockMessages = messages.AsQueryable().BuildMockDbSet();
+            Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
+            Mock<DbSet<Message>> mockMessages = messages.AsQueryable().BuildMockDbSet();
 
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
             mockDb.Object.Messages = mockMessages.Object;
@@ -177,12 +178,12 @@ namespace Chat.Tests.Services
             mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
                 .Returns(mockUsers.Object);
 
-            var messageService = new MessageService(mockLogger.Object,
+            MessageService messageService = new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
                 mockUserRepository.Object);
 
-            var message = new MessageDto { Text = "Message" };
+            MessageDto message = new() { Text = "Message" };
             string user = "user1";
 
             AddMessageResult result = await messageService.AddMessageAsync(message, user);
@@ -211,13 +212,13 @@ namespace Chat.Tests.Services
             Guid giud1 = Guid.NewGuid();
             Guid giud2 = Guid.NewGuid();
             Guid giud3 = Guid.NewGuid();
-            var user1 = new ApplicationUser { Id = giud1.ToString(), UserName = "user1" };
-            var user2 = new ApplicationUser { Id = giud2.ToString(), UserName = "user2" };
-            var user3 = new ApplicationUser { Id = giud3.ToString(), UserName = "user3" };
-            var users = new List<ApplicationUser> { user1, user2, user3 };
-            var messages = new List<Message>
+            ApplicationUser user1 = new() { Id = giud1.ToString(), UserName = "user1" };
+            ApplicationUser user2 = new() { Id = giud2.ToString(), UserName = "user2" };
+            ApplicationUser user3 = new() { Id = giud3.ToString(), UserName = "user3" };
+            List<ApplicationUser> users = new() { user1, user2, user3 };
+            List<Message> messages = new()
             {
-                new Message
+                new()
                 {
                     MessageId = 1,
                     Text = "Message1",
@@ -225,7 +226,7 @@ namespace Chat.Tests.Services
                     CreateDate = DateTime.UtcNow,
                     User = user1
                 },
-                new Message
+                new()
                 {
                     MessageId = 2,
                     Text = "Message2",
@@ -235,19 +236,19 @@ namespace Chat.Tests.Services
                 }
             };
 
-            var mockDb = new Mock<ChatDbContext>();
-            var mockUserService = new Mock<IUserService>();
-            var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<ChatDbContext> mockDb = new();
+            Mock<IUserService> mockUserService = new();
+            Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
 
-            var mockUsers = users.AsQueryable().BuildMockDbSet();
-            var mockMessages = messages.AsQueryable().BuildMockDbSet();
+            Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
+            Mock<DbSet<Message>> mockMessages = messages.AsQueryable().BuildMockDbSet();
 
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
             mockDb.Object.Messages = mockMessages.Object;
 
-            var usersResult = new GetUsersResult { Status = EDbQueryStatus.Success, Data = users };
+            GetUsersResult usersResult = new() { Status = EDbQueryStatus.Success, Data = users };
 
             mockUserService.Setup(x => x.GetUsersAsync(user1.UserName)).ReturnsAsync(usersResult);
 
@@ -256,7 +257,7 @@ namespace Chat.Tests.Services
             mockMessageRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
                 .Returns(mockMessages.Object);
 
-            var messageService = new MessageService(mockLogger.Object,
+            MessageService messageService = new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
                 mockUserRepository.Object);
@@ -301,14 +302,14 @@ namespace Chat.Tests.Services
             Guid guid1 = Guid.NewGuid();
             Guid guid2 = Guid.NewGuid();
             Guid guid3 = Guid.NewGuid();
-            var user1 = new ApplicationUser { Id = guid1.ToString(), UserName = "user1" };
-            var user2 = new ApplicationUser { Id = guid2.ToString(), UserName = "user2" };
-            var user3 = new ApplicationUser { Id = guid3.ToString(), UserName = "user3" };
-            var users = new List<ApplicationUser> { user1, user2, user3 };
+            ApplicationUser user1 = new() { Id = guid1.ToString(), UserName = "user1" };
+            ApplicationUser user2 = new() { Id = guid2.ToString(), UserName = "user2" };
+            ApplicationUser user3 = new() { Id = guid3.ToString(), UserName = "user3" };
+            List<ApplicationUser> users = new() { user1, user2, user3 };
             // В списке два приватных сообщения м/у user1 и user2
-            var messages = new List<Message>
+            List<Message> messages = new()
             {
-                new Message
+                new()
                 {
                     MessageId = 1,
                     Text = "Message1",
@@ -317,7 +318,7 @@ namespace Chat.Tests.Services
                     User = user1,
                     RecipientId = guid2.ToString()
                 },
-                new Message
+                new()
                 {
                     MessageId = 2,
                     Text = "Message2",
@@ -326,7 +327,7 @@ namespace Chat.Tests.Services
                     User = user2,
                     RecipientId = guid2.ToString()
                 },
-                new Message
+                new()
                 {
                     MessageId = 3,
                     Text = "Message3",
@@ -336,19 +337,19 @@ namespace Chat.Tests.Services
                 }
             };
 
-            var mockDb = new Mock<ChatDbContext>();
-            var mockUserService = new Mock<IUserService>();
-            var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<ChatDbContext> mockDb = new();
+            Mock<IUserService> mockUserService = new();
+            Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
 
-            var mockUsers = users.AsQueryable().BuildMockDbSet();
-            var mockMessages = messages.AsQueryable().BuildMockDbSet();
+            Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
+            Mock<DbSet<Message>> mockMessages = messages.AsQueryable().BuildMockDbSet();
 
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
             mockDb.Object.Messages = mockMessages.Object;
 
-            var usersResult = new GetUsersResult { Status = EDbQueryStatus.Success, Data = users };
+            GetUsersResult usersResult = new() { Status = EDbQueryStatus.Success, Data = users };
 
             mockUserService.Setup(x => x.GetUsersAsync(user1.UserName)).ReturnsAsync(usersResult);
 
@@ -357,7 +358,7 @@ namespace Chat.Tests.Services
             mockMessageRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
                 .Returns(mockMessages.Object);
 
-            var messageService = new MessageService(mockLogger.Object,
+            MessageService messageService = new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
                 mockUserRepository.Object);
@@ -372,13 +373,13 @@ namespace Chat.Tests.Services
 
         private static MessageService MockMessageService()
         {
-            var mockDb = new Mock<ChatDbContext>();
-            var mockUserService = new Mock<IUserService>();
-            var mockLogger = new Mock<ILogger<MessageService>>();
+            Mock<ChatDbContext> mockDb = new();
+            Mock<IUserService> mockUserService = new();
+            Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
 
-            return new MessageService(mockLogger.Object,
+            return new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
                 mockUserRepository.Object);

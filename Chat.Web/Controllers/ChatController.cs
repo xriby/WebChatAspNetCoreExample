@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Chat.Web.ViewModels;
 
 namespace Chat.Web.Controllers
 {
@@ -58,7 +59,7 @@ namespace Chat.Web.Controllers
             PrivateMessageInfoResult result = await _messageService.GetPrivateMessageInfoAsync(UserName, with);
             if (result.Status == EDbQueryStatus.Failure)
             {
-                var error = new ErrorViewModel { ErrorMessage = result.ErrorMessage };
+                ErrorViewModel error = new() { ErrorMessage = result.ErrorMessage };
                 return View("Error", error);
             }
             return View("Private", result);

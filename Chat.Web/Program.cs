@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // NLog: Setup NLog for Dependency injection
 builder.Logging.ClearProviders();
@@ -28,7 +28,7 @@ builder.Services.AddTransient<IDateTimeService, DateTimeService>();
 builder.Services.AddTransient<IMessageService, MessageService>();
 builder.Services.AddTransient<IUserService, UserService>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {

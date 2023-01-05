@@ -5,7 +5,7 @@
 @{
     ViewData["Title"] = "Общий чат";
 
-    var message = new MessageDto { MessageType = EMessageType.Public };
+    MessageDto message = new() { MessageType = EMessageType.Public };
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -15,7 +15,7 @@
         <div class="card">
             <div class="card-header"><h4>Сообщения видят все пользователи</h4></div>
             <div class="card-body fixed-panel">
-                @foreach (var item in Model.Messages)
+                @foreach (MessageDto item in Model.Messages)
                 {
                     <div class="media">
                         <div class="media-body">

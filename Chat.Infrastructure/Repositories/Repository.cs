@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Chat.Infrastructure.Repositories
 {
@@ -34,7 +35,7 @@ namespace Chat.Infrastructure.Repositories
 
         public async Task<TEntity> InsertAsync(TEntity entity, CancellationToken cancellationToken)
         {
-            var entityEntry = await DbContext.AddAsync(entity, cancellationToken);
+            EntityEntry<TEntity> entityEntry = await DbContext.AddAsync(entity, cancellationToken);
             await DbContext.SaveChangesAsync(cancellationToken);
 
             return entityEntry.Entity;

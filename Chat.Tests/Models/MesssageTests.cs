@@ -13,7 +13,7 @@ namespace Chat.Tests.Models
         public void TestOperatorMessageToDto()
         {
             int id = 1;
-            var message = new Message { MessageId = id };
+            Message message = new() { MessageId = id };
             MessageDto messageDto = (MessageDto)message;
             Assert.AreEqual(id, messageDto.MessageId);
         }
@@ -22,7 +22,7 @@ namespace Chat.Tests.Models
         public void TestOperatorDtoToMessage()
         {
             int id = 2;
-            var messageDto = new MessageDto { MessageId = id };
+            MessageDto messageDto = new() { MessageId = id };
             Message message = (Message)messageDto;
             Assert.AreEqual(id, message.MessageId);
             Assert.IsNull(message.User);
@@ -32,7 +32,7 @@ namespace Chat.Tests.Models
         public void TestMessageSerialize()
         {
             int id = 1;
-            var message = new MessageDto { MessageId = id, MessageType = EMessageType.Private };
+            MessageDto message = new() { MessageId = id, MessageType = EMessageType.Private };
             string json = JsonSerializer.Serialize(message);
             Debug.WriteLine(json);
 

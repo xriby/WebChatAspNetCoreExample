@@ -30,7 +30,7 @@ namespace Chat.Application.Services
         /// <inheritdoc />
         public async Task<GetUsersResult> GetUsersAsync(string excludeUserName = "")
         {
-            var result = new GetUsersResult { Status = EDbQueryStatus.Success };
+            GetUsersResult result = new() { Status = EDbQueryStatus.Success };
             try
             {
                 List<ApplicationUser> users = await _userRepository.GetAllQueryable()

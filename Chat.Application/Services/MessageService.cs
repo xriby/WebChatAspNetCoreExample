@@ -40,7 +40,7 @@ namespace Chat.Application.Services
         public async Task<AddMessageResult> AddMessageAsync(MessageDto messageDto, string fromUser)
         {
             int maxTextLength = ChatConfiguration.MaxTextLength;
-            var result = new AddMessageResult { Status = EDbQueryStatus.Success };
+            AddMessageResult result = new() { Status = EDbQueryStatus.Success };
             if (string.IsNullOrEmpty(messageDto.Text))
             {
                 result.Status = EDbQueryStatus.Failure;
@@ -93,7 +93,7 @@ namespace Chat.Application.Services
             {
                 throw new ArgumentNullException(nameof(userName));
             }
-            var result = new MessageInfoResult { Status = EDbQueryStatus.Success };
+            MessageInfoResult result = new() { Status = EDbQueryStatus.Success };
             try
             {
                 // Возьмем последние 1000 сообщений, поскольку в примере не реализован постраничный вывод.
@@ -138,7 +138,7 @@ namespace Chat.Application.Services
             {
                 throw new ArgumentNullException(nameof(toUser));
             }
-            var result = new PrivateMessageInfoResult { Status = EDbQueryStatus.Success };
+            PrivateMessageInfoResult result = new() { Status = EDbQueryStatus.Success };
             ApplicationUser userSender = await _userRepository.GetAllQueryable()
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.UserName == fromUser);
@@ -158,7 +158,7 @@ namespace Chat.Application.Services
                 result.ErrorMessage = $"Ошибка. Пользователь {toUser} не найден.";
                 return result;
             }
-            var privateUserIds = new string[] { userSender.Id, userRecipient.Id };
+            string[] privateUserIds = new string[] { userSender.Id, userRecipient.Id };
             result.ToUser = userRecipient;
             try
             {

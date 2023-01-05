@@ -13,6 +13,7 @@ using Chat.Application.Interfaces.Repositories;
 using Chat.Application.Results;
 using Chat.Application.Services;
 using Chat.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Tests.Services
 {
@@ -23,22 +24,22 @@ namespace Chat.Tests.Services
         public async Task GetUsersAsyncWithoutExclude()
         {
             // Arrange
-            var mockDb = new Mock<ChatDbContext>();
-            var mockLogger = new Mock<ILogger<UserService>>();
+            Mock<ChatDbContext> mockDb = new();
+            Mock<ILogger<UserService>> mockLogger = new();
             Mock<IUserRepository> mockUserRepository = new();
             Guid guid1 = Guid.NewGuid();
             Guid guid2 = Guid.NewGuid();
             Guid guid3 = Guid.NewGuid();
-            var user1 = new ApplicationUser { Id = guid1.ToString(), UserName = "user1" };
-            var user2 = new ApplicationUser { Id = guid2.ToString(), UserName = "user2" };
-            var user3 = new ApplicationUser { Id = guid3.ToString(), UserName = "user3" };
-            var users = new List<ApplicationUser> { user1, user2, user3 };
-            var mockUsers = users.AsQueryable().BuildMockDbSet();
+            ApplicationUser user1 = new() { Id = guid1.ToString(), UserName = "user1" };
+            ApplicationUser user2 = new() { Id = guid2.ToString(), UserName = "user2" };
+            ApplicationUser user3 = new() { Id = guid3.ToString(), UserName = "user3" };
+            List<ApplicationUser> users = new() { user1, user2, user3 };
+            Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
             mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
                 .Returns(mockUsers.Object);
 
-            var userService = new UserService(mockLogger.Object, mockUserRepository.Object);
+            UserService userService = new(mockLogger.Object, mockUserRepository.Object);
 
             // Act
             GetUsersResult result = await userService.GetUsersAsync();
@@ -53,22 +54,22 @@ namespace Chat.Tests.Services
         public async Task GetUsersAsyncWithExclude()
         {
             // Arrange
-            var mockDb = new Mock<ChatDbContext>();
-            var mockLogger = new Mock<ILogger<UserService>>();
+            Mock<ChatDbContext> mockDb = new();
+            Mock<ILogger<UserService>> mockLogger = new();
             Mock<IUserRepository> mockUserRepository = new();
             Guid guid1 = Guid.NewGuid();
             Guid guid2 = Guid.NewGuid();
             Guid guid3 = Guid.NewGuid();
-            var user1 = new ApplicationUser { Id = guid1.ToString(), UserName = "user1" };
-            var user2 = new ApplicationUser { Id = guid2.ToString(), UserName = "user2" };
-            var user3 = new ApplicationUser { Id = guid3.ToString(), UserName = "user3" };
-            var users = new List<ApplicationUser> { user1, user2, user3 };
-            var mockUsers = users.AsQueryable().BuildMockDbSet();
+            ApplicationUser user1 = new() { Id = guid1.ToString(), UserName = "user1" };
+            ApplicationUser user2 = new() { Id = guid2.ToString(), UserName = "user2" };
+            ApplicationUser user3 = new() { Id = guid3.ToString(), UserName = "user3" };
+            List<ApplicationUser> users = new() { user1, user2, user3 };
+            Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
             mockDb.Setup(x => x.Users).Returns(mockUsers.Object);
             mockUserRepository.Setup(x => x.GetAllQueryable(It.IsAny<CancellationToken>()))
                 .Returns(mockUsers.Object);
 
-            var userService = new UserService(mockLogger.Object, mockUserRepository.Object);
+            UserService userService = new(mockLogger.Object, mockUserRepository.Object);
 
             // Act
             GetUsersResult result = await userService.GetUsersAsync(user1.UserName);

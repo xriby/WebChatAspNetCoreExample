@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Chat.Application.Interfaces;
 using Chat.Application.ModelsDto;
+using Chat.Web.ViewModels;
 
 namespace Chat.Web.Controllers
 {
