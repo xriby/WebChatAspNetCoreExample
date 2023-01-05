@@ -2,10 +2,10 @@
 
 function OnAddSuccess(data) {
     console.log(data);
-    if (data.Status == "Success") {
+    if (data.status === "Success") {
         window.location.reload(false);
     }
-    else if (data.Status == "Failure") {
+    else if (data.status === "Failure") {
         alert(data.ErrorMessage);
     } else {
         alert(errorMessage);

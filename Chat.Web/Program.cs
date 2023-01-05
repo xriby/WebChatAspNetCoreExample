@@ -1,6 +1,9 @@
 using Chat.Application.Interfaces;
+using Chat.Application.ModelsDto;
 using Chat.Application.Services;
+using Chat.Application.Validations;
 using Chat.Infrastructure;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -23,6 +26,8 @@ builder.Services.AddDataInfrastructure(builder.Configuration);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IValidator<MessageDto>, MessageDtoValidator>();
 
 builder.Services.AddTransient<IDateTimeService, DateTimeService>();
 builder.Services.AddTransient<IMessageService, MessageService>();

@@ -9,6 +9,8 @@ using Chat.Application.Interfaces.Repositories;
 using Chat.Application.Models;
 using Chat.Application.ModelsDto;
 using Chat.Application.Results;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -23,43 +25,37 @@ namespace Chat.Application.Services
         private readonly IUserService _userService;
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IValidator<MessageDto> _validator;
         private bool disposed = false;
 
         public MessageService(ILogger<MessageService> logger,
             IUserService userService,
             IMessageRepository messageRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository, 
+            IValidator<MessageDto> validator)
         {
             _logger = logger;
             _userService = userService;
             _messageRepository = messageRepository;
             _userRepository = userRepository;
+            _validator = validator;
         }
 
         /// <inheritdoc />
         public async Task<AddMessageResult> AddMessageAsync(MessageDto messageDto, string fromUser)
         {
-            int maxTextLength = ChatConfiguration.MaxTextLength;
             AddMessageResult result = new() { Status = EDbQueryStatus.Success };
-            if (string.IsNullOrEmpty(messageDto.Text))
+
+            ValidationResult validationResult = await _validator.ValidateAsync(messageDto);
+            if (!validationResult.IsValid)
             {
                 result.Status = EDbQueryStatus.Failure;
-                result.ErrorMessage = "Ошибка. Введите сообщение.";
+                result.ErrorMessage = string.Join(',', validationResult.Errors.Select(x => x.ErrorMessage));
                 return result;
             }
-            if (messageDto.Text.Length > maxTextLength)
-            {
-                result.Status = EDbQueryStatus.Failure;
-                result.ErrorMessage = $"Ошибка. Максимальная длина сообщения: {maxTextLength} символов.";
-                return result;
-            }
-            if (string.IsNullOrEmpty(fromUser))
-            {
-                result.Status = EDbQueryStatus.Failure;
-                result.ErrorMessage = "Ошибка. Не задан пользователь.";
-                return result;
-            }
-            ApplicationUser user = await _userRepository.GetAllQueryable().FirstOrDefaultAsync(x => x.UserName == fromUser);
+            ApplicationUser user = await _userRepository
+                .GetAllQueryable()
+                .FirstOrDefaultAsync(x => x.UserName == fromUser);
             if (user == null)
             {
                 result.Status = EDbQueryStatus.Failure;

@@ -8,11 +8,11 @@
         /// <summary>
         /// Минимимальная длина сообщения.
         /// </summary>
-        public static int MinTextLength => 2;
+        public const int MinTextLength = 2;
 
         /// <summary>
         /// Максимальная длина сообщения.
         /// </summary>
-        public static int MaxTextLength => 512;
+        public const int MaxTextLength = 512;
     }
 }

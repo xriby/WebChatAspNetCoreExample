@@ -1,12 +1,10 @@
 ﻿using Chat.Application.Interfaces;
 using Chat.Application.ModelsDto;
 using Chat.Application.Results;
+using Chat.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Chat.Web.ViewModels;
 
 namespace Chat.Web.Controllers
 {
@@ -34,6 +32,7 @@ namespace Chat.Web.Controllers
         public async Task<IActionResult> Index()
         {
             MessageInfoResult result = await _messageService.GetMessageInfoAsync(UserName);
+
             return View("Index", (MessageInfoVm)result);
         }
 
@@ -46,7 +45,8 @@ namespace Chat.Web.Controllers
         public async Task<IActionResult> Add(MessageVm message)
         {
             AddMessageResult result = await _messageService.AddMessageAsync((MessageDto)message, UserName);
-            return Content(JsonSerializer.Serialize(result), "application/json", Encoding.UTF8);
+
+            return Ok(result);
         }
 
         /// <summary>
@@ -60,8 +60,10 @@ namespace Chat.Web.Controllers
             if (result.Status == EDbQueryStatus.Failure)
             {
                 ErrorViewModel error = new() { ErrorMessage = result.ErrorMessage };
+
                 return View("Error", error);
             }
+
             return View("Private", (PrivateMessageInfoVm)result);
         }
 

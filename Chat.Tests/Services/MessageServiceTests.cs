@@ -17,6 +17,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace Chat.Tests.Services
 {
@@ -101,6 +103,7 @@ namespace Chat.Tests.Services
             Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
+            Mock<IValidator<MessageDto>> mockValidator = new();
 
             Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
             Mock<DbSet<Message>> mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -118,7 +121,8 @@ namespace Chat.Tests.Services
             MessageService messageService = new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
-                mockUserRepository.Object);
+                mockUserRepository.Object,
+                mockValidator.Object);
 
             MessageDto message = new() { Text = "Message" };
             string user = "user";
@@ -164,6 +168,7 @@ namespace Chat.Tests.Services
             Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
+            Mock<IValidator<MessageDto>> mockValidator = new();
 
             Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
             Mock<DbSet<Message>> mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -181,7 +186,8 @@ namespace Chat.Tests.Services
             MessageService messageService = new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
-                mockUserRepository.Object);
+                mockUserRepository.Object,
+                mockValidator.Object);
 
             MessageDto message = new() { Text = "Message" };
             string user = "user1";
@@ -241,6 +247,7 @@ namespace Chat.Tests.Services
             Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
+            Mock<IValidator<MessageDto>> mockValidator = new();
 
             Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
             Mock<DbSet<Message>> mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -260,7 +267,8 @@ namespace Chat.Tests.Services
             MessageService messageService = new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
-                mockUserRepository.Object);
+                mockUserRepository.Object, 
+                mockValidator.Object);
 
             MessageInfoResult result = await messageService.GetMessageInfoAsync(user1.UserName);
 
@@ -342,6 +350,7 @@ namespace Chat.Tests.Services
             Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
+            Mock<IValidator<MessageDto>> mockValidator = new();
 
             Mock<DbSet<ApplicationUser>> mockUsers = users.AsQueryable().BuildMockDbSet();
             Mock<DbSet<Message>> mockMessages = messages.AsQueryable().BuildMockDbSet();
@@ -361,7 +370,8 @@ namespace Chat.Tests.Services
             MessageService messageService = new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
-                mockUserRepository.Object);
+                mockUserRepository.Object, 
+                mockValidator.Object);
 
             PrivateMessageInfoResult result = await messageService.GetPrivateMessageInfoAsync(user1.UserName, user2.UserName);
 
@@ -378,11 +388,22 @@ namespace Chat.Tests.Services
             Mock<ILogger<MessageService>> mockLogger = new();
             Mock<IMessageRepository> mockMessageRepository = new();
             Mock<IUserRepository> mockUserRepository = new();
+            Mock<IValidator<MessageDto>> mockValidator = new();
+
+            ValidationResult validationResult = new ValidationResult();
+
+            mockValidator
+                .Setup(x => x.Validate(It.IsAny<MessageDto>()))
+                .Returns(validationResult);
+            mockValidator
+                .Setup(x => x.ValidateAsync(It.IsAny<MessageDto>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(validationResult);
 
             return new(mockLogger.Object,
                 mockUserService.Object,
                 mockMessageRepository.Object,
-                mockUserRepository.Object);
+                mockUserRepository.Object, 
+                mockValidator.Object);
         }
     }
 }

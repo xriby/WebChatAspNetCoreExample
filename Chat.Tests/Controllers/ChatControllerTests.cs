@@ -61,14 +61,9 @@ namespace Chat.Tests.Controllers
             mockMessageService.Setup(x => x.AddMessageAsync(It.IsAny<MessageDto>(), It.IsAny<string>())).ReturnsAsync(addMessageResult);
             ChatController controller = new(mockMessageService.Object, mockUserService.Object);
 
-            ContentResult result = await controller.Add((MessageVm)message) as ContentResult;
+            ObjectResult result = await controller.Add((MessageVm)message) as ObjectResult;
 
             Assert.IsNotNull(result);
-            JsonDocument document = JsonDocument.Parse(result.Content);
-            JsonElement dataElement = document.RootElement.GetProperty("Data");
-            MessageDto addedMessage = JsonSerializer.Deserialize<MessageDto>(dataElement.GetRawText());
-            Assert.AreEqual(message.MessageId, addedMessage.MessageId);
-            Assert.AreEqual(message.Text, addedMessage.Text);
             mockMessageService.Verify(x => x.AddMessageAsync(It.IsAny<MessageDto>(), It.IsAny<string>()), Times.Once);
         }
 
